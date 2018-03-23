@@ -1,0 +1,26 @@
+﻿<Page x:Class="ProcessConfigurationManager.WPF.StartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="500"
+	Title="StartPage">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Software Process Configuration Manager" Margin="15,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24"/>
+        <Separator Grid.Row="1" Margin="15,0"/>
+        <TextBlock Grid.Row="2" Margin="15,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            1. Start with File -> Load Profile and choose your process profile OWL file.<LineBreak/>
+            2. Choose Diagram -> UML -> Activity Diagram to enable UML Activity Diagram configuration.<LineBreak/>
+            3. Reconfigure your process and save diagram as .kotr file or export it as a PNG Image.<LineBreak/>
+            4. Get back later - load diagram from .kotr file - equivalent OWL process profile must be loaded.
+        </TextBlock>
+    </Grid>
+</Page>

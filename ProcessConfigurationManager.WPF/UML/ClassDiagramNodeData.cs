@@ -1,19 +1,16 @@
-﻿using Northwoods.GoXam.Model;
-using ProcessConfigurationManager.UPMM;
+﻿using ProcessConfigurationManager.UPMM;
 using System;
-using System.Xml.Linq;
 
 namespace ProcessConfigurationManager.WPF.UML
 {
     [Serializable]
-    public class ActivityDiagramNodeData : UmlNodeData
+    public class ClassDiagramNodeData : UmlNodeData
     {
-
-        public ActivityDiagramNodeData() : base()
+        public ClassDiagramNodeData() : base()
         {
         }
 
-        public ActivityDiagramNodeData(SoftwareProcessElement processElement, String category)
+        public ClassDiagramNodeData(SoftwareProcessElement processElement, String category)
             : this()
         {
             IRI = processElement.IRI;
@@ -25,10 +22,6 @@ namespace ProcessConfigurationManager.WPF.UML
             Category = category;
             Key = processElement.Name + "-" + category;
 
-            if (category=="Swimlane")
-            {
-                this.IsSubGraph = true;
-            }
             Width = 400;
             Height = 600;
         }

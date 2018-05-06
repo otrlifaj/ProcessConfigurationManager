@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using SWF = System.Windows.Forms;
 
-namespace ProcessConfigurationManager.WPF
+namespace ProcessConfigurationManager.WPF.UML
 {
     /// <summary>
     /// Interaction logic for ActivityDiagramPage.xaml

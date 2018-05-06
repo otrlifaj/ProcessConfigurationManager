@@ -81,6 +81,10 @@
     <Compile Include="StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UML\ClassDiagramLinkData.cs" />
+    <Compile Include="UML\ClassDiagramNodeData.cs" />
+    <Compile Include="UML\UmlLinkData.cs" />
+    <Compile Include="UML\UmlNodeData.cs" />
     <Compile Include="UML\UML4UPMM.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>

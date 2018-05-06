@@ -5,6 +5,7 @@ using System.Windows.Media;
 using ProcessConfigurationManager.UPMM;
 using ProcessConfigurationManager.OWLParser;
 using SWF = System.Windows.Forms;
+using ProcessConfigurationManager.WPF.UML;
 
 namespace ProcessConfigurationManager.WPF
 {

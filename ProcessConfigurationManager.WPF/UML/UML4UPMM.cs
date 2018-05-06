@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ProcessConfigurationManager.WPF
+namespace ProcessConfigurationManager.WPF.UML
 {
     public class UML4UPMM
     {

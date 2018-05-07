@@ -53,8 +53,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Northwoods.GoWPF">
-      <HintPath>..\packages\Northwoods.GoWPF.dll</HintPath>
+    <Reference Include="Northwoods.GoWPF, Version=2.1.6.45, Culture=neutral, PublicKeyToken=616e2dc80068a33d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Northwoods.GoWPF.2.1.6\lib\net45\Northwoods.GoWPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -135,6 +135,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

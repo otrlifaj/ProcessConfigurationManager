@@ -16,11 +16,11 @@
         <TextBlock Grid.Row="0" Text="About" Margin="15,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24"/>
         <Separator Grid.Row="1" Margin="15,0"/>
         <TextBlock Grid.Row="2" Margin="15,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            This program was created for academic purposes as a bachelor thesis.<LineBreak/>
+            This program was created and extended for academic purposes as my master thesis.<LineBreak/>
             NorthWoods GoWPF, IKVM, OWLAPI and other libraries had been used. <LineBreak/><LineBreak/>
             VŠB-TUO FEI
             © Ondřej Trlifaj<LineBreak/>
-            2015
+            2018
         </TextBlock>
     </Grid>
 </Page>

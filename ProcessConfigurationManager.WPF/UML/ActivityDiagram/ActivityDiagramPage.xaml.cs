@@ -19,14 +19,19 @@ namespace ProcessConfigurationManager.WPF.UML
     /// </summary>
     public partial class ActivityDiagramPage : Page
     {
+        private const string XML_LINK_STRING = "Link";
+        private const string XML_NODE_STRING = "Node";
+        private const string XML_ROOT_STRING = "KOTRActivityDiagram";
+        private const string XML_VALIDATION_ATRIBUTE_STRING = "validation";
         private List<UPMM.SoftwareProcessElement> softwareProcessProfile = null;
         private List<ActivityDiagramNodeData> paletteModel = null;
         private UML4UPMM uml4upmm = null;
         public static Boolean IsValidatingWithModel = false;
         public static Boolean AllowDuplicateNodes = false;
+
         public ActivityDiagramPage()
         {
-            InitializeComponent();
+            InitializeComponent(); //
             Application.Current.MainWindow.Width = 1000;
             Application.Current.MainWindow.Height = 600;
             var model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>();
@@ -35,14 +40,14 @@ namespace ProcessConfigurationManager.WPF.UML
             model.LinksSource = new ObservableCollection<ActivityDiagramLinkData>();
             model.Modifiable = true;
             model.HasUndoManager = false;
-            diagram.Model = model;
-            diagram.AllowDrop = true;
-            var labelTool = new SimpleLabelDraggingTool();
-            labelTool.Diagram = diagram;
-            diagram.MouseMoveTools.Insert(0, labelTool);
-            palette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>();
-            flowPalette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>();
-            flowPalette.Model.NodesSource = new List<ActivityDiagramNodeData>()
+            diagram.Model = model; //
+            diagram.AllowDrop = true; //
+            var labelTool = new SimpleLabelDraggingTool(); //
+            labelTool.Diagram = diagram; //
+            diagram.MouseMoveTools.Insert(0, labelTool); //
+            palette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>(); // 
+            flowPalette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>(); //
+            flowPalette.Model.NodesSource = new List<ActivityDiagramNodeData>() //
             {
                 new ActivityDiagramNodeData() { Key="Initial Activity", Category="Initial Activity", Name="Initial Activity"},
                 new ActivityDiagramNodeData() { Key="Final Activity", Category="Final Activity", Name="Final Activity"},
@@ -57,7 +62,7 @@ namespace ProcessConfigurationManager.WPF.UML
             model.LinkToPath = "To";
             model.NodeCategoryPath = "Category";
             model.NodeIsGroupPath = "IsSubGraph";
-            model.GroupNodePath = "SubGraphKey"; 
+            model.GroupNodePath = "SubGraphKey";
         }
 
         public ActivityDiagramPage(List<UPMM.SoftwareProcessElement> softwareProcessProfile)
@@ -67,15 +72,15 @@ namespace ProcessConfigurationManager.WPF.UML
             {
                 this.softwareProcessProfile = softwareProcessProfile;
                 uml4upmm = new UML4UPMM(softwareProcessProfile);
-                paletteModel = uml4upmm.MapUPMMToActivityDiagramNodeData();
-                ADElementsListbox.SelectedIndex = 0;
+                paletteModel = uml4upmm.MapUPMMToActivityDiagramNodeData(); //
+                ADElementsListbox.SelectedIndex = 0; //
 
-                diagram.SelectionChanged += diagram_SelectionChanged;
-                palette.SelectionChanged += palette_SelectionChanged;
+                diagram.SelectionChanged += diagram_SelectionChanged; //
+                palette.SelectionChanged += palette_SelectionChanged; //
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Activity diagram initialization failed. Missing OWL file?", ex);
+                throw new ProcessManagerException("Activity diagram initialization failed. Missing OWL file?", ex);
             }
         }
 
@@ -171,13 +176,17 @@ namespace ProcessConfigurationManager.WPF.UML
             ChooseLinkCategory(fromData, toData, linkData);
             switch (linkData.Category)
             {
-                case "Control Flow": CheckLink(fromData, toData, linkData);
+                case "Control Flow":
+                    CheckLink(fromData, toData, linkData);
                     break;
-                case "Object Flow": CheckLink(fromData, toData, linkData);
+                case "Object Flow":
+                    CheckLink(fromData, toData, linkData);
                     break;
-                case "Anchor": CheckLink(fromData, toData, linkData);
+                case "Anchor":
+                    CheckLink(fromData, toData, linkData);
                     break;
-                default: (diagram.LinksSource as ObservableCollection<ActivityDiagramLinkData>).Remove(linkData);
+                default:
+                    (diagram.LinksSource as ObservableCollection<ActivityDiagramLinkData>).Remove(linkData);
                     break;
             }
 
@@ -243,147 +252,85 @@ namespace ProcessConfigurationManager.WPF.UML
                 linkData.Category = "Control Flow";
         }
 
-        // metody pro uložení diagramu do obrázku png
-        public void SavePngFile(String filename)
-        {
-            Rect bounds = diagram.Panel.DiagramBounds;
-            double width = bounds.Width;
-            double height = bounds.Height;
-            double scale = 1.0;
-
-            if (width > 2000)
-                scale = 2000 / width; ;
-            if (height > 2000)
-                scale = Math.Min(scale, 2000 / height);
-
-            width = Math.Ceiling(width * scale);
-            height = Math.Ceiling(height * scale);
-
-            BitmapSource bmp = diagram.Panel.MakeBitmap(new Size(width, height), 96, new Point(bounds.X, bounds.Y), scale);
-            PngBitmapEncoder png = new PngBitmapEncoder();
-            png.Frames.Add(BitmapFrame.Create(bmp));
-            using (System.IO.Stream stream = System.IO.File.Create(filename))
-            {
-                png.Save(stream);
-            }
-        }
+        // metoda pro uložení diagramu do obrázku png
         private void SavePNG_Click(object sender, RoutedEventArgs e)
         {
-            var fileDialog = new SWF.SaveFileDialog();
-            fileDialog.Filter = "PNG Files (*.png)|*.png";
-            fileDialog.Title = "Save diagram as PNG";
-            fileDialog.FilterIndex = 0;
-            fileDialog.FileName = "ActivityDiagram.png";
+            DiagramUtils diagramUtils = new DiagramUtils();
+            var diagramBmp = diagramUtils.MakeBitmap(diagram.Panel);
+            diagramUtils.SavePngDialog(diagramBmp, defaultFilename: "ActivityDiagram.png");
 
-            var result = fileDialog.ShowDialog();
-
-            if (result == SWF.DialogResult.OK)
-            {
-                try
-                {
-                    SavePngFile(fileDialog.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message + "\n" + ex.InnerException.Message + "\n" + ex.InnerException.InnerException.Message);
-                }
-            }
         }
         // metoda pro serializaci datového modelu grafu do kotr xml
+
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             if ((diagram.NodesSource as ObservableCollection<ActivityDiagramNodeData>).Count == 0)
                 return;
-            var fileDialog = new SWF.SaveFileDialog();
-            fileDialog.Filter = "KOTR Files (*.kotr)|*.kotr";
-            fileDialog.Title = "Save diagram as KOTR XML";
-            fileDialog.FilterIndex = 0;
-            fileDialog.FileName = "ActivityDiagram.kotr";
 
-            var result = fileDialog.ShowDialog();
+            var model = diagram.Model as GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>;
+            if (model == null) return;
+            XElement root = model.Save<ActivityDiagramNodeData, ActivityDiagramLinkData>(XML_ROOT_STRING, XML_NODE_STRING, XML_LINK_STRING);
+            root.SetAttributeValue(XML_VALIDATION_ATRIBUTE_STRING, ValidationComboBox.SelectedIndex);
 
-            if (result == SWF.DialogResult.OK)
-            {
-                try
-                {
-                    var model = diagram.Model as GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>;
-                    if (model == null) return;
-                    XElement root = model.Save<ActivityDiagramNodeData, ActivityDiagramLinkData>("KOTRActivityDiagram", "Node", "Link");
-                    if (fileDialog.CheckFileExists)
-                    {
-                        MessageBox.Show("File with this name already exists.");
-                    }
-                    else
-                    {
-                        root.Save(fileDialog.FileName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message + "\n" + ex.InnerException.Message + "\n" + ex.InnerException.InnerException.Message);
-                }
-            }
-
-
-
+            DiagramUtils diagramUtils = new DiagramUtils();
+            diagramUtils.SaveDiagramDialog(root, "ActivityDiagram.kotr");
         }
         // metoda pro deserializaci datového modelu grafu z kotr xml
+
         private void Load_Click(object sender, RoutedEventArgs e)
         {
             var diagramModel = diagram.Model as GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>;
             if (diagramModel == null) return;
-            var fileDialog = new SWF.OpenFileDialog();
-            fileDialog.Filter = "KOTR Files (*.kotr)|*.kotr";
-            fileDialog.Title = "Load diagram fromData KOTR XML";
-            fileDialog.FilterIndex = 0;
 
-            var result = fileDialog.ShowDialog();
-
-            if (result == SWF.DialogResult.OK)
+            DiagramUtils diagramUtils = new DiagramUtils();
+            var diagramXml = diagramUtils.LoadDiagramDialog();
+            try
             {
-                try
+                //vypnu validaci z UPMM(protože diagram může být uložený jako nevalidovaný)
+                var validationAttribute = diagramXml.Attribute(XML_VALIDATION_ATRIBUTE_STRING);
+                if (validationAttribute != null)
                 {
-                    using (FileStream fileStream = new FileStream(fileDialog.FileName, FileMode.Open))
+                    ValidationComboBox.SelectedIndex = Int32.Parse(validationAttribute.Value);
+                }
+                else
+                {
+                    ValidationComboBox.SelectedIndex = 0;
+                }
+
+                //zkontroluju, jestli všechny uzly, které mají IRI mají svůj elemnet v načteném profilu procesu
+                var loadedModel = new GraphLinksModel<ActivityDiagramNodeData, string, string, ActivityDiagramLinkData>();
+                loadedModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(diagramXml, XML_NODE_STRING, XML_LINK_STRING);
+
+                string[] categories = { "Activity", "Object", "Swimlane", "Note", "Send Signal Action", "Accept Event Action" };
+                int countOfMissing = 0;
+                foreach (string IRI in (loadedModel.NodesSource as ObservableCollection<ActivityDiagramNodeData>).Where(x => categories.Contains(x.Category)).Select(x => x.IRI))
+                {
+                    if (!softwareProcessProfile.Any(x => x.IRI == IRI))
                     {
-                        XElement root = XElement.Load(fileStream);
-                        //vypnu validaci z UPMM(protože diagram může být uložený jako nevalidovaný) 
-                        ValidationComboBox.SelectedIndex = 1;
-
-                        //zkontroluju, jestli všechny uzly, které mají IRI mají svůj elemnet v načteném profilu procesu
-                        var loadedModel = new GraphLinksModel<ActivityDiagramNodeData, string, string, ActivityDiagramLinkData>();
-                        loadedModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(root, "Node", "Link");
-
-                        string[] categories = { "Activity", "Object", "Swimlane", "Note", "Send Signal Action", "Accept Event Action" };
-                        int countOfMissing = 0;
-                        foreach (string IRI in (loadedModel.NodesSource as ObservableCollection<ActivityDiagramNodeData>).Where(x => categories.Contains(x.Category)).Select(x => x.IRI))
-                        {
-                            if (softwareProcessProfile.Where(x => x.IRI == IRI).Count() == 0)
-                            {
-                                countOfMissing++;
-                            }
-                        }
-
-                        if (countOfMissing > 0)
-                        {
-                            MessageBox.Show("Diagram can't be loaded, because it does not match your OWL profile.");
-                        }
-                        else
-                        {
-                            //pokud všechny uzly s IRI mají své IRI v profilu, přidám diagram, 
-                            diagramModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(root, "Node", "Link");
-                        }
+                        countOfMissing++;
                     }
                 }
-                catch (Exception ex)
+
+                if (countOfMissing > 0)
                 {
-                    MessageBox.Show(ex.ToString());
+                    throw new ProcessManagerException("Diagram can't be loaded, because it does not match your OWL profile.");
                 }
+                else
+                {
+                    //pokud všechny uzly s IRI mají své IRI v profilu, přidám diagram, 
+                    diagramModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(diagramXml, XML_NODE_STRING, XML_LINK_STRING);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                new Utils().ShowExceptionMessageBox(ex);
             }
         }
         // metoda reagujícína zapnutí, vypnutí validace - kontrola existujícího modelu diagramu
         private void ValidationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ValidationComboBox.SelectedIndex == 0)
+            if (ValidationComboBox.SelectedIndex == 1)
             {
                 ActivityDiagramPage.IsValidatingWithModel = true;
                 Validate.IsEnabled = true;
@@ -428,11 +375,14 @@ namespace ProcessConfigurationManager.WPF.UML
                 ChooseLinkCategory(fromData, toData, linkData);
                 switch (linkData.Category)
                 {
-                    case "Control Flow": CheckLink(fromData, toData, linkData);
+                    case "Control Flow":
+                        CheckLink(fromData, toData, linkData);
                         break;
-                    case "Object Flow": CheckLink(fromData, toData, linkData);
+                    case "Object Flow":
+                        CheckLink(fromData, toData, linkData);
                         break;
-                    case "Anchor": CheckLink(fromData, toData, linkData);
+                    case "Anchor":
+                        CheckLink(fromData, toData, linkData);
                         break;
                 }
 
@@ -492,6 +442,7 @@ namespace ProcessConfigurationManager.WPF.UML
 
 
     }
+
     // tool pro vkládání uzlů do swimlane -- obsahuje validaci pro drag-and-drop do swimlane
     public class SwimlaneDraggingTool : DraggingTool
     {
@@ -561,7 +512,6 @@ namespace ProcessConfigurationManager.WPF.UML
 
         public override void DoDragLeave(DragEventArgs e)
         {
-
             base.DoDragLeave(e);
         }
     }
@@ -575,7 +525,7 @@ namespace ProcessConfigurationManager.WPF.UML
             {
                 return false;
             }
-            
+
             return base.IsValidLink(fromnode, fromport, tonode, toport);
         }
     }
@@ -588,7 +538,7 @@ namespace ProcessConfigurationManager.WPF.UML
             {
                 return false;
             }
-            
+
             return base.IsValidLink(fromnode, fromport, tonode, toport);
         }
     }

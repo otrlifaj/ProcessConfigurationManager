@@ -18,6 +18,7 @@ namespace ProcessConfigurationManager.WPF
         private StartPage startPage = null;
         private About aboutPage = null;
         private ActivityDiagramPage activityDiagramPage = null;
+        private ClassDiagramPage classDiagramPage = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -49,6 +50,7 @@ namespace ProcessConfigurationManager.WPF
                     OWLAPI.Initialize(fileDialog.FileName);
                     softwareProcessProfile = OWLAPI.GetSoftwareProcess();
                     ActivityDiagram.IsEnabled = true;
+                    ClassDiagram.IsEnabled = true;
                     profileInfoLabel.Text = "Process profile file loaded";
                     profileInfoLabel.Foreground = Brushes.Green;
                     LoadProfile.IsEnabled = false;
@@ -74,12 +76,28 @@ namespace ProcessConfigurationManager.WPF
                 ContentFrame.Navigate(activityDiagramPage);
                 statusLabel.Text = "Activity Diagram";
             }
-            catch (ApplicationException ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\n" + ex.InnerException.Message);
+                new Utils().ShowExceptionMessageBox(ex);
             }
         }
 
+        private void ClassDiagramMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (classDiagramPage == null)
+                {
+                    classDiagramPage = new ClassDiagramPage(softwareProcessProfile);
+                }
+                ContentFrame.Navigate(classDiagramPage);
+                statusLabel.Text = "Class Diagram";
+            }
+            catch (Exception ex)
+            {
+                new Utils().ShowExceptionMessageBox(ex);
+            }
+        }
 
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -105,6 +123,7 @@ namespace ProcessConfigurationManager.WPF
             statusLabel.Text = "Start page";
             softwareProcessProfile = null;
             activityDiagramPage = null;
+            classDiagramPage = null;
             ActivityDiagram.IsEnabled = false;
             LoadProfile.IsEnabled = true;
             UnloadProfile.IsEnabled = false;

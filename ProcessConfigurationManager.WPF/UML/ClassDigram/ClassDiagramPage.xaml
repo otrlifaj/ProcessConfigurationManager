@@ -1,0 +1,100 @@
+﻿<Page x:Class="ProcessConfigurationManager.WPF.UML.ClassDiagramPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProcessConfigurationManager.WPF.UML"
+      xmlns:go="http://schemas.nwoods.com/GoXam"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ClassDiagramPage">
+
+    <Grid Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="250"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <!-- PALETA PROCESOVÝCH UZLŮ -->
+        <Grid Grid.Column="0" Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MinHeight="40" MaxHeight="140"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="5*" MinHeight="80"/>
+            </Grid.RowDefinitions>
+            <ListBox Name="CDElementsListbox" Grid.Row="0" Padding="5" BorderThickness="1" Margin="2" BorderBrush="Black" SelectionChanged="CDElementsListbox_SelectionChanged">
+                <ListBoxItem Content="Class" />
+            </ListBox>
+            <GridSplitter Grid.Row="1" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Gray"/>
+            <go:Palette x:Name="palette"  Grid.Row="2"
+                    Padding="5" Margin="2" BorderThickness="1"
+                    BorderBrush="Gray"
+                    Background="White"
+                    VerticalAlignment="Top"
+                    HorizontalContentAlignment="Left"
+                    VerticalContentAlignment="Top">
+                    <!-- TODO -->
+                    <!--NodeTemplateDictionary="{StaticResource paletteActivityDiagramNodeTemplates}"-->
+                    <!--GroupTemplate="{StaticResource ResourceKey=SwimlanePalette}"-->
+                <go:Diagram.Layout>
+                    <go:GridLayout CellSize="5 5" Sorting="Forward" Spacing="5 5" Alignment="Position" />
+                </go:Diagram.Layout>
+            </go:Palette>
+        </Grid>
+        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Gray"/>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="90" MaxHeight="90"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="5*" MinHeight="80"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0">
+                <StackPanel Orientation="Vertical" >
+                    <Button Content="Save as image" Click="SavePNG_Click"  x:Name="PNGButton" Padding="7,6" ToolTip="Save diagram as PNG image."/>
+                    <Button Content="Save" Click="Save_Click"  x:Name="SaveButton" Padding="7,6" ToolTip="Save diagram as .kotr xml file."/>
+                    <Button Content="Load" Click="Load_Click"  x:Name="LoadButton" Padding="7,6" ToolTip="Load diagram from .kotr xml file."/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <ComboBox Name="ValidationComboBox" Text="Validation" SelectedIndex="0" SelectionChanged="ValidationComboBox_SelectionChanged">
+                        <ComboBoxItem>
+                            <TextBlock Text="Validation off"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock Text="Validation on"/>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox Name="DuplicatesComboBox" Text="Duplicates" SelectedIndex="1" SelectionChanged="DuplicatesComboBox_SelectionChanged"  ToolTip="Allow/ban duplicate nodes.">
+                        <ComboBoxItem>
+                            <TextBlock Text="Allow duplicates"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock Text="Ban duplicates"/>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <Button Content="Validate" Click="Validate_Click"  x:Name="Validate" Padding="7,6" ToolTip="Force validation. (Validation is automatic, use this, if you consider validation not correct.)" IsEnabled="False"/>
+                </StackPanel>
+
+            </StackPanel>
+            
+            <!-- PALETA FLOW UZLŮ -->
+
+            <GridSplitter Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Gray"/>
+            <Grid Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <!-- DIAGRAM -->
+                <TextBox MaxWidth="300" VerticalContentAlignment="Top" TextWrapping="WrapWithOverflow" Grid.Column="2" x:Name="descriptionTextBox" FontSize="11" IsReadOnly="True" Visibility="Collapsed" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

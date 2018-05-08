@@ -76,21 +76,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UML\ActivityDiagramLinkData.cs" />
-    <Compile Include="UML\ActivityDiagramNodeData.cs" />
+    <Compile Include="UML\ActivityDiagram\ActivityDiagramLinkData.cs" />
+    <Compile Include="UML\ActivityDiagram\ActivityDiagramNodeData.cs" />
     <Compile Include="StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UML\ClassDiagramLinkData.cs" />
-    <Compile Include="UML\ClassDiagramNodeData.cs" />
-    <Compile Include="UML\UmlLinkData.cs" />
-    <Compile Include="UML\UmlNodeData.cs" />
-    <Compile Include="UML\UML4UPMM.cs" />
+    <Compile Include="UML\ClassDigram\ClassDiagramLinkData.cs" />
+    <Compile Include="UML\ClassDigram\ClassDiagramNodeData.cs" />
+    <Compile Include="UML\ClassDigram\ClassDiagramPage.xaml.cs">
+      <DependentUpon>ClassDiagramPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UML\Common\DiagramUtils.cs" />
+    <Compile Include="UML\Common\ProcessManagerException.cs" />
+    <Compile Include="UML\Common\UmlLinkData.cs" />
+    <Compile Include="UML\Common\UmlNodeData.cs" />
+    <Compile Include="UML\Common\UML4UPMM.cs" />
+    <Compile Include="UML\Common\UmlPage.cs" />
+    <Compile Include="Utils.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UML\ActivityDiagramPage.xaml">
+    <Page Include="UML\ActivityDiagram\ActivityDiagramPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -101,7 +108,7 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UML\ActivityDiagramPage.xaml.cs">
+    <Compile Include="UML\ActivityDiagram\ActivityDiagramPage.xaml.cs">
       <DependentUpon>ActivityDiagramPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
@@ -113,6 +120,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="StartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UML\ClassDigram\ClassDiagramPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -19,6 +19,7 @@
             <MenuItem Header="Diagram">
                 <MenuItem Header="UML">
                     <MenuItem Name="ActivityDiagram" Header="Activity Diagram" Click="ActivityDiagramMenuItem_Click" IsEnabled="False"/>
+                    <MenuItem Name="ClassDiagram" Header="Class Diagram" Click="ClassDiagramMenuItem_Click"  IsEnabled="false"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="About" Click="AboutMenuItem_Click">

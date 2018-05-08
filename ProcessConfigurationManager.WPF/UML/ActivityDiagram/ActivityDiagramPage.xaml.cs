@@ -224,6 +224,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 if (relationship == null)
                 {
                     (diagram.LinksSource as ObservableCollection<ActivityDiagramLinkData>).Remove(linkData);
+                    return;
                 }
                 // možnost 2
                 linkData.Guide = "<<" + relationship + ">>";
@@ -232,6 +233,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     (diagram.LinksSource as ObservableCollection<ActivityDiagramLinkData>).Remove(linkData);
                 }
+                else if ((diagram.LinksSource as ObservableCollection<ActivityDiagramLinkData>).Where(x => x.From == linkData.From && x.To == linkData.To).Count() == 0)
+                {
+                    (diagram.LinksSource as ObservableCollection<ActivityDiagramLinkData>).Add(linkData);
+                }
+
+
             }
 
         }

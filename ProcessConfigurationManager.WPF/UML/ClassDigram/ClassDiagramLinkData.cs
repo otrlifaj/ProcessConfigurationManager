@@ -12,7 +12,7 @@ namespace ProcessConfigurationManager.WPF.UML
 
         }
 
-        public ClassDiagramLinkData(String guide=null, String category=null) : base(guide, category)
+        public ClassDiagramLinkData(String category) : base(category)
         {
 
         }

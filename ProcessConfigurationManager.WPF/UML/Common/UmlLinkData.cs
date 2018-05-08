@@ -7,21 +7,7 @@ namespace ProcessConfigurationManager.WPF.UML
     [Serializable]
     public class UmlLinkData : GraphLinksModelLinkData<String, String>
     {
-        private string _Guide;
         private string _Color;
-        public String Guide
-        {
-            get { return _Guide; }
-            set
-            {
-                if (_Guide != value)
-                {
-                    String old = _Guide;
-                    _Guide = value;
-                    RaisePropertyChanged("Guide", old, value);
-                }
-            }
-        }
 
         public String Color
         {
@@ -40,25 +26,22 @@ namespace ProcessConfigurationManager.WPF.UML
         public override XElement MakeXElement(XName n)
         {
             XElement xe = base.MakeXElement(n);
-            xe.Add(XHelper.Attribute("Guide", this.Guide, ""));
             xe.Add(XHelper.Attribute("Color", this.Color, "Black"));
             return xe;
         }
         public override void LoadFromXElement(XElement e)
         {
             base.LoadFromXElement(e);
-            this.Guide = XHelper.Read("Guide", e, "");
             this.Color = XHelper.Read("Color", e, "Black");
         }
 
-        public UmlLinkData()
+        public UmlLinkData() : base()
         {
 
         }
 
-        public UmlLinkData(String guide = null, String category = null) : this()
+        public UmlLinkData(String category) : this()
         {
-            Guide = guide;
             Category = category;
         }
     }

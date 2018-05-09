@@ -128,6 +128,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 this.descriptionTextBox.Visibility = System.Windows.Visibility.Visible;
             }
         }
+        
         // event handler pro filtraci palety podle vybrané kategorie
         private void ADElementsListbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -165,6 +166,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 }
             }
         }
+        
         // event handler pro validaci myší vytvořených linků jakožto povolených vztahů z UPMM
         private void diagram_LinkDrawn(object sender, DiagramEventArgs e)
         {
@@ -293,6 +295,10 @@ namespace ProcessConfigurationManager.WPF.UML
             var diagramXml = diagramUtils.LoadDiagramDialog();
             try
             {
+                if (diagramXml.Name != XML_ROOT_STRING)
+                {
+                    throw new ProcessManagerException("This file cannot be imported, because it contains different diagram type data.");
+                }
                 //vypnu validaci z UPMM(protože diagram může být uložený jako nevalidovaný)
                 var validationAttribute = diagramXml.Attribute(XML_VALIDATION_ATRIBUTE_STRING);
                 if (validationAttribute != null)
@@ -334,6 +340,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 new Utils().ShowExceptionMessageBox(ex);
             }
         }
+
         // metoda reagujícína zapnutí, vypnutí validace - kontrola existujícího modelu diagramu
         private void ValidationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

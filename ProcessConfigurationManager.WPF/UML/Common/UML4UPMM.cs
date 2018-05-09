@@ -46,6 +46,11 @@ namespace ProcessConfigurationManager.WPF.UML
             this.softwareProcess = softwareProcess;
         }
 
+        public List<ClassDiagramNodeData> MapUPMMToClassDiagramNodeData()
+        {
+            return new List<ClassDiagramNodeData>();
+        }
+
         public List<ActivityDiagramNodeData> MapUPMMToActivityDiagramNodeData()
         {
             List<ActivityDiagramNodeData> result = new List<ActivityDiagramNodeData>();

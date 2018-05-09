@@ -1,6 +1,7 @@
 ﻿using Northwoods.GoXam;
 using Northwoods.GoXam.Model;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
@@ -12,9 +13,13 @@ namespace ProcessConfigurationManager.WPF.UML
 {
     public class DiagramUtils
     {
+        public List<String> ClassDiagramLinkTypes { get; private set; }
         public DiagramUtils()
         {
-
+            ClassDiagramLinkTypes = new List<String>
+            {
+                "Association", "Aggregation", "composition", "Generalization"
+            };
         }
 
         public BitmapSource MakeBitmap(DiagramPanel diagramPanel)

@@ -1,4 +1,5 @@
 ﻿using Northwoods.GoXam.Model;
+using ProcessConfigurationManager.UPMM;
 using System;
 using System.Xml.Linq;
 
@@ -195,6 +196,21 @@ namespace ProcessConfigurationManager.WPF.UML
         public UmlNodeData()
         {
 
+        }
+
+        public UmlNodeData(SoftwareProcessElement processElement, String category) : this()
+        {
+            IRI = processElement.IRI;
+            Name = processElement.Name;
+            Description = processElement.Description;
+            Stereotype = processElement.GetUPMMType();
+            BorderColor = "Black";
+
+            Category = category;
+            Key = processElement.Name + "-" + category;
+
+            Width = 400;
+            Height = 600;
         }
     }
 }

@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using Northwoods.GoXam;
 using Northwoods.GoXam.Model;
+using Northwoods.GoXam.Tool;
 using ProcessConfigurationManager.UPMM;
 
 namespace ProcessConfigurationManager.WPF.UML
@@ -29,24 +30,44 @@ namespace ProcessConfigurationManager.WPF.UML
         private const string XML_NODE_STRING = "Node";
         private const string XML_ROOT_STRING = "KOTRClassDiagram";
         private const string XML_VALIDATION_ATRIBUTE_STRING = "validation";
+        private const string UML_CD_ASSOCIATION = "Association";
+        private const string UML_CD_AGGREGATION = "Aggregation";
+        private const string UML_CD_GENERALIZATION = "Generalization";
+        private const string UML_CD_ANCHOR = "Anchor";
+
         protected List<SoftwareProcessElement> SoftwareProcessProfile { get; set; }
         protected UML4UPMM Uml4Upmm { get; set; }
         protected List<ClassDiagramNodeData> PaletteModel { get; set; }
         protected GraphLinksModel<ClassDiagramNodeData, String, String, ClassDiagramLinkData> DiagramModel { get; set; }
+        private List<LinkTypeComboBoxItem> LinkTypes { get; set; }
+        private string SelectedLinkType { get; set; }
 
         public static Boolean IsValidatingWithModel { get; set; } = false;
         public static Boolean AllowDuplicateNodes { get; set; } = false;
 
-
         public ClassDiagramPage()
         {
             InitializeComponent();
+            LinkTypes = new List<LinkTypeComboBoxItem>()
+            {
+                new LinkTypeComboBoxItem(1, UML_CD_ASSOCIATION),
+                new LinkTypeComboBoxItem(2, UML_CD_AGGREGATION),
+                new LinkTypeComboBoxItem(3, UML_CD_GENERALIZATION),
+                new LinkTypeComboBoxItem(4, UML_CD_ANCHOR)
+            };
+            SelectedLinkType = LinkTypes.First().Name;
+
+            linkTypeComboBox.ItemsSource = LinkTypes.OrderBy(item => item.Id);
+            linkTypeComboBox.DisplayMemberPath = "Name";
+            linkTypeComboBox.SelectedValuePath = "Name";
+            linkTypeComboBox.SelectedValue = UML_CD_ASSOCIATION;
+
             Application.Current.MainWindow.Width = 1000;
             Application.Current.MainWindow.Height = 600;
             DiagramModel = new GraphLinksModel<ClassDiagramNodeData, String, String, ClassDiagramLinkData>();
             DiagramModel.NodesSource = new ObservableCollection<ClassDiagramNodeData>();
             DiagramModel.LinksSource = new ObservableCollection<ClassDiagramLinkData>();
-            DiagramModel.Modifiable = false;
+            DiagramModel.Modifiable = true;
             DiagramModel.HasUndoManager = false;
             DiagramModel.NodeKeyPath = "Key";
             DiagramModel.LinkFromPath = "From";
@@ -60,6 +81,11 @@ namespace ProcessConfigurationManager.WPF.UML
 
             palette.Model = new GraphLinksModel<ClassDiagramNodeData, String, String, ClassDiagramLinkData>();
 
+            notePalette.Model = new GraphLinksModel<ClassDiagramNodeData, String, String, ClassDiagramLinkData>();
+            notePalette.Model.NodesSource = new List<ClassDiagramNodeData>()
+            {
+                new ClassDiagramNodeData() { Key = "Note", Category="Note", Name="Note"}
+            };
         }
 
         public ClassDiagramPage(List<SoftwareProcessElement> softwareProcessProfile) : this()
@@ -139,7 +165,7 @@ namespace ProcessConfigurationManager.WPF.UML
         {
             ClassDiagramNodeData data = (sender as Diagram).SelectedNode.Data as ClassDiagramNodeData;
 
-            string[] categories = { "Class", "Note" };
+            string[] categories = { "Class" };
 
             if (categories.Contains(data.Category) && !AllowDuplicateNodes)
             {
@@ -276,10 +302,84 @@ namespace ProcessConfigurationManager.WPF.UML
             // TODO
         }
 
+        private void LinkTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedValue = (sender as ComboBox).SelectedValue as string;
+            SelectedLinkType = selectedValue ?? SelectedLinkType;
+        }
+
         // event handler pro validaci myší vytvořených linků jakožto povolených vztahů z UPMM
         private void diagram_LinkDrawn(object sender, Northwoods.GoXam.DiagramEventArgs e)
         {
+            Link link = (e.Part as Link);
+            (link.Data as ClassDiagramLinkData).Category = SelectedLinkType;
+            var linkData = link.Data as ClassDiagramLinkData;
+            var fromData = link.FromData as ClassDiagramNodeData;
+            var toData = link.ToData as ClassDiagramNodeData;
+
+            CheckLink(fromData, toData, linkData);
+        }
+
+        private void diagram_LinkRelinked(object sender, DiagramEventArgs e)
+        {
+            Link link = (e.Part as Link);
+            var linkData = link.Data as ClassDiagramLinkData;
+            var fromData = link.FromData as ClassDiagramNodeData;
+            var toData = link.ToData as ClassDiagramNodeData;
+
+            CheckLink(fromData, toData, linkData);
+        }
+
+        private void CheckLink(ClassDiagramNodeData fromData, ClassDiagramNodeData toData, ClassDiagramLinkData linkData)
+        {
             // TODO
         }
+
     }
+
+    internal class LinkTypeComboBoxItem
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public LinkTypeComboBoxItem()
+        {
+
+        }
+
+        public LinkTypeComboBoxItem(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+    }
+
+    // tooly pro zajištění korektnosti hrany - není možná reflexivní hrana
+    internal class ClassDiagramLinkingTool : LinkingTool
+    {
+        public override bool IsValidLink(Node fromnode, FrameworkElement fromport, Node tonode, FrameworkElement toport)
+        {
+            if (fromnode == tonode)
+            {
+                return false;
+            }
+
+            return base.IsValidLink(fromnode, fromport, tonode, toport);
+        }
+    }
+
+    internal class ClassDiagramRelinkingTool : RelinkingTool
+    {
+        public override bool IsValidLink(Node fromnode, FrameworkElement fromport, Node tonode, FrameworkElement toport)
+        {
+            if (fromnode == tonode)
+            {
+                return false;
+            }
+
+            return base.IsValidLink(fromnode, fromport, tonode, toport);
+        }
+    }
+
 }

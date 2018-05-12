@@ -14,23 +14,12 @@ namespace ProcessConfigurationManager.WPF.UML
         }
 
         public ActivityDiagramNodeData(SoftwareProcessElement processElement, String category)
-            : this()
+            : base(processElement, category)
         {
-            IRI = processElement.IRI;
-            Name = processElement.Name;
-            Description = processElement.Description;
-            Stereotype = processElement.GetUPMMType();
-            BorderColor = "Black";
-
-            Category = category;
-            Key = processElement.Name + "-" + category;
-
             if (category=="Swimlane")
             {
                 this.IsSubGraph = true;
             }
-            Width = 400;
-            Height = 600;
         }
     }
 }

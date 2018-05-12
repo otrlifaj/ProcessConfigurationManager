@@ -44,5 +44,15 @@ namespace ProcessConfigurationManager.WPF.UML
         {
             Category = category;
         }
+        
+        public UmlLinkData(String category, String color) : this(category)
+        {
+            Color = color;
+        }
+
+        public UmlLinkData(String category, String color, String text): this(category, color)
+        {
+            Text = text;
+        }
     }
 }

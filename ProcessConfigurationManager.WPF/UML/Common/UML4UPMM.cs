@@ -8,47 +8,108 @@ namespace ProcessConfigurationManager.WPF.UML
     public class UML4UPMM
     {
         private Dictionary<UPMMTypes, List<String>> ActivityDiagramNodeDataMappingRules;
+        private Dictionary<UPMMTypes, List<String>> ClassDiagramNodeDataMappingRules;
+
         private List<SoftwareProcessElement> softwareProcess;
+
+
         public UML4UPMM(List<SoftwareProcessElement> softwareProcess)
         {
-            ActivityDiagramNodeDataMappingRules = new Dictionary<UPMMTypes, List<String>>();
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Task, new List<String>() { "Activity" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Alternative, new List<String>() { "Activity" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Process, new List<String>() { "Activity" });
-
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Role, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Group, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Competence, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Law, new List<String>() { "Object" });
-
-
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Object, new List<String>() { "Object" });
-
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Entity, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Information, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Artifact, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Material, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Document, new List<String>() { "Object" });
-
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Resource, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.HumanResource, new List<String>() { "Object" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.InanimateResource, new List<String>() { "Object" });
-
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Event, new List<String>() { "Send Signal Action", "Accept Event Action" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Issue, new List<String>() { "Send Signal Action", "Accept Event Action" });
-
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Context, new List<String>() { "Swimlane" });
-
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Goal, new List<String>() { "Note" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Intention, new List<String>() { "Note" });
-            ActivityDiagramNodeDataMappingRules.Add(UPMMTypes.Argument, new List<String>() { "Note" });
-
+            InitADMappingRules();
+            InitCDMappingRules();
             this.softwareProcess = softwareProcess;
+        }
+
+        private void InitADMappingRules()
+        {
+            ActivityDiagramNodeDataMappingRules = new Dictionary<UPMMTypes, List<String>>()
+            {
+                {UPMMTypes.Task, new List<String>() { "Activity" } },
+                {UPMMTypes.Alternative, new List<String>() { "Activity" } },
+                {UPMMTypes.Process, new List<String>() { "Activity" } },
+
+                {UPMMTypes.Role, new List<String>() { "Object" } },
+                {UPMMTypes.Group, new List<String>() { "Object" } },
+                {UPMMTypes.Competence, new List<String>() { "Object" } },
+                {UPMMTypes.Law, new List<String>() { "Object" } },
+
+
+                {UPMMTypes.Object, new List<String>() { "Object" } },
+
+                {UPMMTypes.Entity, new List<String>() { "Object" } },
+                {UPMMTypes.Information, new List<String>() { "Object" } },
+                {UPMMTypes.Artifact, new List<String>() { "Object" } },
+                {UPMMTypes.Material, new List<String>() { "Object" } },
+                {UPMMTypes.Document, new List<String>() { "Object" } },
+
+                {UPMMTypes.Resource, new List<String>() { "Object" } },
+                {UPMMTypes.HumanResource, new List<String>() { "Object" } },
+                {UPMMTypes.InanimateResource, new List<String>() { "Object" } },
+
+                {UPMMTypes.Event, new List<String>() { "Send Signal Action", "Accept Event Action" } },
+                {UPMMTypes.Issue, new List<String>() { "Send Signal Action", "Accept Event Action" } },
+
+                {UPMMTypes.Context, new List<String>() { "Swimlane" } },
+
+                {UPMMTypes.Goal, new List<String>() { "Note" } },
+                {UPMMTypes.Intention, new List<String>() { "Note" } },
+                {UPMMTypes.Argument, new List<String>() { "Note" } }
+            };
+        }
+
+        private void InitCDMappingRules()
+        {
+            ClassDiagramNodeDataMappingRules = new Dictionary<UPMMTypes, List<string>>()
+            {
+                {UPMMTypes.Context, new List<String>() {"Class"}},
+
+                {UPMMTypes.Object, new List<String>() {"Class"}},
+
+                {UPMMTypes.Entity, new List<String>() {"Class"}},
+                {UPMMTypes.Information, new List<String>() {"Class"}},
+                {UPMMTypes.Artifact, new List<String>() {"Class"}},
+                {UPMMTypes.Material, new List<String>() {"Class"}},
+                {UPMMTypes.Document, new List<String>() {"Class"}},
+
+                {UPMMTypes.Resource, new List<String>() {"Class"}},
+                {UPMMTypes.HumanResource, new List<String>() {"Class"}},
+                {UPMMTypes.InanimateResource, new List<String>() {"Class"}},
+
+                {UPMMTypes.Alternative, new List<String>() {"Class"}},
+                {UPMMTypes.Argument, new List<String>() {"Class"}},
+                {UPMMTypes.Issue, new List<String>() {"Class"}},
+                {UPMMTypes.Intention, new List<String>() {"Class"}},
+                {UPMMTypes.Goal, new List<String>() {"Class"}},
+                {UPMMTypes.Competence, new List<String>() {"Class"}},
+                {UPMMTypes.Role, new List<String>() {"Class"}},
+                {UPMMTypes.Group, new List<String>() {"Class"}},
+                {UPMMTypes.Law, new List<String>() {"Class"}},
+
+            };
+
         }
 
         public List<ClassDiagramNodeData> MapUPMMToClassDiagramNodeData()
         {
-            return new List<ClassDiagramNodeData>();
+            List<ClassDiagramNodeData> result = new List<ClassDiagramNodeData>();
+            foreach (var item in softwareProcess)
+            {
+                result.AddRange(GetListOfClassDiagramNodes(item));
+            }
+            return result;
+        }
+
+        private List<ClassDiagramNodeData> GetListOfClassDiagramNodes(SoftwareProcessElement item)
+        {
+            List<ClassDiagramNodeData> result = new List<ClassDiagramNodeData>();
+            List<String> categories = ClassDiagramNodeDataMappingRules.Where(x => x.Key == item.Type).Select(x => x.Value).FirstOrDefault();
+            if (categories == null)
+                return result;
+            foreach (var category in categories)
+            {
+                result.Add(new ClassDiagramNodeData(item, category));
+            }
+            return result;
         }
 
         public List<ActivityDiagramNodeData> MapUPMMToActivityDiagramNodeData()
@@ -101,7 +162,7 @@ namespace ProcessConfigurationManager.WPF.UML
                         color = "Red";
                         if (validation)
                         {
-      
+
                             return null;
                         }
                         else
@@ -158,7 +219,7 @@ namespace ProcessConfigurationManager.WPF.UML
                     {
                         color = "Red";
                         if (validation)
-                        { 
+                        {
                             return null;
                         }
                         else
@@ -726,6 +787,13 @@ namespace ProcessConfigurationManager.WPF.UML
             color = "Black";
             return null;
 
+        }
+
+        public string CheckCDRelationship(string sourceIRI, string targetIRI, bool validation, out string color, string sourceNodeCategory, string targetNodeCategory)
+        {
+            // TODO
+            color = "Black";
+            return null;
         }
     }
 }

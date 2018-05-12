@@ -31,7 +31,7 @@ namespace ProcessConfigurationManager.WPF.UML
 
         public ActivityDiagramPage()
         {
-            InitializeComponent(); //
+            InitializeComponent();
             Application.Current.MainWindow.Width = 1000;
             Application.Current.MainWindow.Height = 600;
             var model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>();
@@ -40,14 +40,14 @@ namespace ProcessConfigurationManager.WPF.UML
             model.LinksSource = new ObservableCollection<ActivityDiagramLinkData>();
             model.Modifiable = true;
             model.HasUndoManager = false;
-            diagram.Model = model; //
-            diagram.AllowDrop = true; //
-            var labelTool = new SimpleLabelDraggingTool(); //
-            labelTool.Diagram = diagram; //
-            diagram.MouseMoveTools.Insert(0, labelTool); //
-            palette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>(); // 
-            flowPalette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>(); //
-            flowPalette.Model.NodesSource = new List<ActivityDiagramNodeData>() //
+            diagram.Model = model;
+            diagram.AllowDrop = true;
+            var labelTool = new SimpleLabelDraggingTool();
+            labelTool.Diagram = diagram;
+            diagram.MouseMoveTools.Insert(0, labelTool);
+            palette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>();
+            flowPalette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>();
+            flowPalette.Model.NodesSource = new List<ActivityDiagramNodeData>()
             {
                 new ActivityDiagramNodeData() { Key="Initial Activity", Category="Initial Activity", Name="Initial Activity"},
                 new ActivityDiagramNodeData() { Key="Final Activity", Category="Final Activity", Name="Final Activity"},
@@ -72,11 +72,11 @@ namespace ProcessConfigurationManager.WPF.UML
             {
                 this.softwareProcessProfile = softwareProcessProfile;
                 uml4upmm = new UML4UPMM(softwareProcessProfile);
-                paletteModel = uml4upmm.MapUPMMToActivityDiagramNodeData(); //
-                ADElementsListbox.SelectedIndex = 0; //
+                paletteModel = uml4upmm.MapUPMMToActivityDiagramNodeData();
+                ADElementsListbox.SelectedIndex = 0;
 
-                diagram.SelectionChanged += diagram_SelectionChanged; //
-                palette.SelectionChanged += palette_SelectionChanged; //
+                diagram.SelectionChanged += diagram_SelectionChanged;
+                palette.SelectionChanged += palette_SelectionChanged;
             }
             catch (Exception ex)
             {

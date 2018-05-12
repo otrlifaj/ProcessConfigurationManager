@@ -1,29 +1,50 @@
 ﻿using ProcessConfigurationManager.UPMM;
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace ProcessConfigurationManager.WPF.UML
 {
     [Serializable]
     public class ClassDiagramNodeData : UmlNodeData
     {
+        private List<String> _Attributes;
+
+        public List<String> Attributes
+        {
+            get { return _Attributes; }
+            set
+            {
+                if (_Attributes != value)
+                {
+                    List<String> old = _Attributes;
+                    _Attributes = value;
+                    RaisePropertyChanged("Attributes", old, value);
+                }
+            }
+        }
         public ClassDiagramNodeData() : base()
         {
+            _Attributes = new List<String>();
         }
 
         public ClassDiagramNodeData(SoftwareProcessElement processElement, String category)
-            : this()
+            : base(processElement, category)
         {
-            IRI = processElement.IRI;
-            Name = processElement.Name;
-            Description = processElement.Description;
-            Stereotype = processElement.GetUPMMType();
-            BorderColor = "Black";
 
-            Category = category;
-            Key = processElement.Name + "-" + category;
+            _Attributes = new List<String>();
 
-            Width = 400;
-            Height = 600;
+            var type = processElement.GetType();
+            var properties = type.GetProperties();
+
+            List<String> ignoredProperties = new List<string> { "IRI", "Name", "Description", "Type" };
+            var classSpecificProperties = properties.Where(p => !ignoredProperties.Contains(p.Name)).ToList();
+
+            foreach (var p in classSpecificProperties)
+            {
+                _Attributes.Add(p.Name);  
+            }
         }
     }
 }

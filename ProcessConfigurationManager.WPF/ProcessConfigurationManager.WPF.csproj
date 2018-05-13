@@ -86,6 +86,8 @@
     <Compile Include="UML\ClassDigram\ClassDiagramPage.xaml.cs">
       <DependentUpon>ClassDiagramPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UML\Common\Constants.cs" />
+    <Compile Include="UML\Common\DiagramTools\SimpleLabelDraggingTool.cs" />
     <Compile Include="UML\Common\DiagramUtils.cs" />
     <Compile Include="UML\Common\ProcessManagerException.cs" />
     <Compile Include="UML\Common\UmlLinkData.cs" />

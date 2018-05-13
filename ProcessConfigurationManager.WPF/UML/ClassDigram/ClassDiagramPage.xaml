@@ -44,19 +44,23 @@
                 <go:LinkPanel go:Part.SelectionElementName="Path" 
                     go:Part.Reshapable="True">
                     <go:Link.Route>
-                        <go:Route Routing="Orthogonal" Curve="JumpGap" Corner="20" RelinkableTo="True" RelinkableFrom="True"/>
+                        <go:Route Routing="AvoidsNodes" Curve="JumpGap" Corner="20" RelinkableTo="True" RelinkableFrom="True"/>
                     </go:Link.Route>
                     <go:LinkShape x:Name="Path" Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1" go:LinkPanel.IsLinkShape="True"/>
-                    <Path Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1"  go:LinkPanel.ToArrow="OpenTriangle" go:LinkPanel.ToArrowScale="2"/>
-                        <TextBlock Text="{Binding Path=Data.Text}" go:LinkPanel.Index="-1"
-                   go:LinkPanel.Offset="NaN NaN" go:LinkPanel.Orientation="Upright" Foreground="Black"/>
+                    <Path Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1"  go:LinkPanel.ToArrow="OpenTriangle" go:LinkPanel.ToArrowScale="1.5"/>
+                    <TextBlock Text="{Binding Path=Data.Text, Mode=TwoWay}" go:Part.TextEditable="True"
+                   go:LinkPanel.Offset="NaN NaN" go:LinkPanel.Orientation="None" Foreground="Black"/>
+                    <TextBlock Text="{Binding Path=Data.ToText, Mode=TwoWay}" go:Part.TextEditable="True"
+                   go:LinkPanel.Orientation="Along" go:LinkPanel.Offset="-20 NaN"  go:LinkPanel.Index="-1" Foreground="Black"/>
+                    <TextBlock Text="{Binding Path=Data.FromText, Mode=TwoWay}" go:Part.TextEditable="True"
+                   go:LinkPanel.Orientation="Along" go:LinkPanel.Offset="NaN NaN" go:LinkPanel.Index="1" Foreground="Black"/>
                 </go:LinkPanel>
             </DataTemplate>
             <DataTemplate x:Key="Generalization">
                 <go:LinkPanel go:Part.SelectionElementName="Path" 
                     go:Part.Reshapable="True">
                     <go:Link.Route>
-                        <go:Route Routing="Orthogonal" Corner="20" RelinkableTo="True" RelinkableFrom="True" Curve="JumpGap"/>
+                        <go:Route Routing="AvoidsNodes" Corner="20" RelinkableTo="True" RelinkableFrom="True" Curve="JumpGap"/>
                     </go:Link.Route>
                     <go:LinkShape x:Name="Path"
                                   Stroke="{Binding Path=Data.Color,Converter={StaticResource theStringBrushConverter}}"
@@ -66,8 +70,8 @@
                           Fill="{Binding Path=Data.ArrowHeadColor, Converter={StaticResource theStringBrushConverter}}"
                           StrokeThickness="1"
                           go:LinkPanel.ToArrow="Triangle"
-                          go:LinkPanel.ToArrowScale="2"/>
-                    <TextBlock Text="{Binding Path=Data.Text}" go:LinkPanel.Index="-1"
+                          go:LinkPanel.ToArrowScale="1.5"/>
+                    <TextBlock Text="{Binding Path=Data.Text, Mode=TwoWay}" go:Part.TextEditable="True"
                    go:LinkPanel.Offset="NaN NaN" go:LinkPanel.Orientation="Upright" Foreground="Black"/>
                 </go:LinkPanel>
             </DataTemplate>
@@ -76,7 +80,7 @@
                 <go:LinkPanel go:Part.SelectionElementName="Path" 
                     go:Part.Reshapable="True">
                     <go:Link.Route>
-                        <go:Route Routing="Orthogonal" Corner="20" RelinkableTo="True" RelinkableFrom="True" Curve="JumpGap"/>
+                        <go:Route Routing="AvoidsNodes" Corner="20" RelinkableTo="True" RelinkableFrom="True" Curve="JumpGap"/>
                     </go:Link.Route>
                     <go:LinkShape x:Name="Path"
                                   Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}"
@@ -86,9 +90,11 @@
                           Fill="{Binding Path=Data.ArrowHeadColor, Converter={StaticResource theStringBrushConverter}}"
                           StrokeThickness="1"
                           go:LinkPanel.FromArrow="StretchedDiamond"
-                          go:LinkPanel.FromArrowScale="2"/>
-                    <TextBlock Text="{Binding Path=Data.Text}" go:LinkPanel.Index="-1"
+                          go:LinkPanel.FromArrowScale="1.5"/>
+                    <TextBlock Text="{Binding Path=Data.Text, Mode=TwoWay}" go:Part.TextEditable="True"
                    go:LinkPanel.Offset="NaN NaN" go:LinkPanel.Orientation="Upright" Foreground="Black"/>
+                    <TextBlock Text="{Binding Path=Data.ToText, Mode=TwoWay}" go:Part.TextEditable="True"
+                   go:LinkPanel.Offset="-10 10" go:LinkPanel.Orientation="Upright"  go:LinkPanel.Index="-1" Foreground="Black"/>
                 </go:LinkPanel>
             </DataTemplate>
 
@@ -99,7 +105,7 @@
                     </go:Link.Route>
                     <Path Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1" />
                     <go:LinkShape x:Name="Path" Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeDashArray="4 4" StrokeThickness="1" go:LinkPanel.IsLinkShape="True"/>
-                    <TextBlock Text="{Binding Path=Data.Text}" go:LinkPanel.Index="-1"
+                    <TextBlock Text="{Binding Path=Data.Text, Mode=TwoWay}" go:Part.TextEditable="True"
                    go:LinkPanel.Offset="NaN NaN" go:LinkPanel.Orientation="Upright" Foreground="Black"/>
                 </go:LinkPanel>
             </DataTemplate>
@@ -134,40 +140,44 @@
                   go:Node.Location="{Binding Path=Data.Location, Mode=TwoWay}"
                   Width="auto">
                     <Border Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="2"
-                        go:Node.PortId=""
+                        go:Node.PortId="" Cursor="Hand"
                         go:Node.FromSpot="AllSides" go:Node.ToSpot="AllSides">
                         <Grid Cursor="Hand" >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" MinHeight="50"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" Text="{Binding Path=Data.Stereotype}" Style="{StaticResource TextBlockStyle}"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" MinHeight="50"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Vertical"
+                                        go:Node.LinkableFrom="true" go:Node.LinkableTo="True">
+                                
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Text="{Binding Path=Data.Stereotype}" Style="{StaticResource TextBlockStyle}" />
 
-                        </Grid>
+                            </Grid>
 
-                        <TextBlock Grid.Row="1" HorizontalAlignment="Center"
-                                Text="{Binding Path=Data.Name}" FontWeight="Bold" Width="auto" Cursor="Hand"/>
-                        <ListView Grid.Row="2" Background="White" HorizontalAlignment="Stretch"
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center"
+                                Text="{Binding Path=Data.Name}" FontWeight="Bold" Width="auto" />
+                            </StackPanel>
+                            <ListView Grid.Row="2" Background="White" HorizontalAlignment="Stretch"
                                   ItemsSource="{Binding Path=Data.Attributes}"
-                                  go:Node.LinkableFrom="true" go:Node.LinkableTo="True" Cursor="Arrow">
+                                  Cursor="Arrow">
 
-                            <ListView.View>
-                                <GridView ColumnHeaderContainerStyle="{StaticResource classAttributesListViewHiddenHeader}">
-                                    <GridView.Columns>
-                                        <GridViewColumn
+                                <ListView.View>
+                                    <GridView ColumnHeaderContainerStyle="{StaticResource classAttributesListViewHiddenHeader}">
+                                        <GridView.Columns>
+                                            <GridViewColumn
                                             DisplayMemberBinding="{Binding}" />
-                                    </GridView.Columns>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-                </Border>
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                    </Border>
                 </go:NodePanel>
             </DataTemplate>
         </go:DataTemplateDictionary>
@@ -191,7 +201,7 @@
                 </go:NodePanel>
             </DataTemplate>
         </go:DataTemplateDictionary>
-        
+
         <go:DataTemplateDictionary x:Key="paletteClassDiagramNodeTemplates">
             <DataTemplate x:Key="Class">
                 <Border Background="{Binding Path=Data.Color}" BorderBrush="Black" BorderThickness="2" CornerRadius="2" 
@@ -294,7 +304,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <Label>
-                        <TextBlock>Link options</TextBlock>
+                        <TextBlock>Link type</TextBlock>
                     </Label>
                     <ComboBox x:Name="linkTypeComboBox" SelectionChanged="LinkTypeComboBox_SelectionChanged">
                     </ComboBox>

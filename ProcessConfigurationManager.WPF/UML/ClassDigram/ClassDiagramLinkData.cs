@@ -16,10 +16,24 @@ namespace ProcessConfigurationManager.WPF.UML
             get { return _fromText; }
             set
             {
-                if (_fromText != value)
+                if (_fromText != value || value == "")
                 {
                     String old = _fromText;
-                    _fromText = value;
+                    if (value == "")
+                    {
+                        if (Category == Constants.UML_CD_ASSOCIATION)
+                        {
+                            _fromText = "1";
+                        }
+                        else
+                        {
+                            _fromText = value;
+                        }
+                    }
+                    else
+                    {
+                        _fromText = value;
+                    }
                     RaisePropertyChanged("FromText", old, value);
                 }
             }
@@ -30,10 +44,28 @@ namespace ProcessConfigurationManager.WPF.UML
             get { return _toText; }
             set
             {
-                if (_toText != value)
+                if (_toText != value || value == "")
                 {
                     String old = _toText;
-                    _toText = value;
+                    if (value == "")
+                    {
+                        if (Category == Constants.UML_CD_AGGREGATION)
+                        {
+                            _toText = "1";
+                        }
+                        else if (Category == Constants.UML_CD_ASSOCIATION)
+                        {
+                            _toText = "1";
+                        }
+                        else
+                        {
+                            _toText = value;
+                        }
+                    }
+                    else
+                    {
+                        _toText = value;
+                    }
                     RaisePropertyChanged("ToText", old, value);
                 }
             }
@@ -72,7 +104,7 @@ namespace ProcessConfigurationManager.WPF.UML
 
         public ClassDiagramLinkData() : this("", "", "", "", "Black", "White")
         {
-            
+
         }
 
 

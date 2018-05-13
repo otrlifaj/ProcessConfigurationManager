@@ -26,15 +26,6 @@ namespace ProcessConfigurationManager.WPF.UML
     /// </summary>
     public partial class ClassDiagramPage : Page
     {
-        private const string XML_LINK_STRING = "Link";
-        private const string XML_NODE_STRING = "Node";
-        private const string XML_ROOT_STRING = "KOTRClassDiagram";
-        private const string XML_VALIDATION_ATRIBUTE_STRING = "validation";
-        private const string UML_CD_ASSOCIATION = "Association";
-        private const string UML_CD_AGGREGATION = "Aggregation";
-        private const string UML_CD_GENERALIZATION = "Generalization";
-        private const string UML_CD_ANCHOR = "Anchor";
-
         protected List<SoftwareProcessElement> SoftwareProcessProfile { get; set; }
         protected UML4UPMM Uml4Upmm { get; set; }
         protected List<ClassDiagramNodeData> PaletteModel { get; set; }
@@ -50,17 +41,17 @@ namespace ProcessConfigurationManager.WPF.UML
             InitializeComponent();
             LinkTypes = new List<LinkTypeComboBoxItem>()
             {
-                new LinkTypeComboBoxItem(1, UML_CD_ASSOCIATION),
-                new LinkTypeComboBoxItem(2, UML_CD_AGGREGATION),
-                new LinkTypeComboBoxItem(3, UML_CD_GENERALIZATION),
-                new LinkTypeComboBoxItem(4, UML_CD_ANCHOR)
+                new LinkTypeComboBoxItem(1, Constants.UML_CD_ASSOCIATION),
+                new LinkTypeComboBoxItem(2, Constants.UML_CD_AGGREGATION),
+                new LinkTypeComboBoxItem(3, Constants.UML_CD_GENERALIZATION),
+                new LinkTypeComboBoxItem(4, Constants.UML_CD_ANCHOR)
             };
             SelectedLinkType = LinkTypes.First().Name;
 
             linkTypeComboBox.ItemsSource = LinkTypes.OrderBy(item => item.Id);
             linkTypeComboBox.DisplayMemberPath = "Name";
             linkTypeComboBox.SelectedValuePath = "Name";
-            linkTypeComboBox.SelectedValue = UML_CD_ASSOCIATION;
+            linkTypeComboBox.SelectedValue = Constants.UML_CD_ASSOCIATION;
 
             Application.Current.MainWindow.Width = 1000;
             Application.Current.MainWindow.Height = 600;
@@ -78,6 +69,10 @@ namespace ProcessConfigurationManager.WPF.UML
 
             diagram.Model = DiagramModel;
             diagram.AllowDrop = true;
+
+            var labelTool = new SimpleLabelDraggingTool();
+            labelTool.Diagram = diagram;
+            diagram.MouseMoveTools.Insert(0, labelTool);
 
             palette.Model = new GraphLinksModel<ClassDiagramNodeData, String, String, ClassDiagramLinkData>();
 
@@ -192,8 +187,8 @@ namespace ProcessConfigurationManager.WPF.UML
 
             var model = diagram.Model as GraphLinksModel<ClassDiagramNodeData, String, String, ClassDiagramLinkData>;
             if (model == null) return;
-            XElement root = model.Save<ClassDiagramNodeData, ClassDiagramLinkData>(XML_ROOT_STRING, XML_NODE_STRING, XML_LINK_STRING);
-            root.SetAttributeValue(XML_VALIDATION_ATRIBUTE_STRING, ValidationComboBox.SelectedIndex);
+            XElement root = model.Save<ClassDiagramNodeData, ClassDiagramLinkData>(Constants.UML_CD_XML_ROOT_STRING, Constants.UML_CD_XML_NODE_STRING, Constants.UML_CD_XML_LINK_STRING);
+            root.SetAttributeValue(Constants.UML_CD_XML_VALIDATION_ATTRIBUTE_STRING, ValidationComboBox.SelectedIndex);
 
             DiagramUtils diagramUtils = new DiagramUtils();
             diagramUtils.SaveDiagramDialog(root, "ClassDiagram.kotr");
@@ -210,12 +205,12 @@ namespace ProcessConfigurationManager.WPF.UML
 
             try
             {
-                if (diagramXml.Name != XML_ROOT_STRING)
+                if (diagramXml.Name != Constants.UML_CD_XML_ROOT_STRING)
                 {
                     throw new ProcessManagerException("This file cannot be imported, because it contains different diagram type data.");
                 }
                 //vypnu validaci z UPMM(protože diagram může být uložený jako nevalidovaný)
-                var validationAttribute = diagramXml.Attribute(XML_VALIDATION_ATRIBUTE_STRING);
+                var validationAttribute = diagramXml.Attribute(Constants.UML_CD_XML_VALIDATION_ATTRIBUTE_STRING);
                 if (validationAttribute != null)
                 {
                     ValidationComboBox.SelectedIndex = Int32.Parse(validationAttribute.Value);
@@ -227,7 +222,7 @@ namespace ProcessConfigurationManager.WPF.UML
 
                 //zkontroluju, jestli všechny uzly, které mají IRI mají svůj elemnet v načteném profilu procesu
                 var loadedModel = new GraphLinksModel<ClassDiagramNodeData, string, string, ClassDiagramLinkData>();
-                loadedModel.Load<ClassDiagramNodeData, ClassDiagramLinkData>(diagramXml, XML_NODE_STRING, XML_LINK_STRING);
+                loadedModel.Load<ClassDiagramNodeData, ClassDiagramLinkData>(diagramXml, Constants.UML_CD_XML_NODE_STRING, Constants.UML_CD_XML_LINK_STRING);
 
                 string[] categories = { "Class", "Note" };
                 int countOfMissing = 0;
@@ -246,7 +241,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 else
                 {
                     //pokud všechny uzly s IRI mají své IRI v profilu, přidám diagram, 
-                    diagramModel.Load<ClassDiagramNodeData, ClassDiagramLinkData>(diagramXml, XML_NODE_STRING, XML_LINK_STRING);
+                    diagramModel.Load<ClassDiagramNodeData, ClassDiagramLinkData>(diagramXml, Constants.UML_CD_XML_NODE_STRING, Constants.UML_CD_XML_LINK_STRING);
                 }
 
             }
@@ -299,12 +294,24 @@ namespace ProcessConfigurationManager.WPF.UML
         // vynucení validace diagramu
         private void Validate_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
+            var originalLinksSource = new ObservableCollection<ClassDiagramLinkData>(diagram.LinksSource as ObservableCollection<ClassDiagramLinkData>);
+            diagram.LinksSource = new ObservableCollection<ClassDiagramLinkData>();
+            foreach (var linkData in originalLinksSource)
+            {
+                var fromData = (diagram.Model.NodesSource as ObservableCollection<ClassDiagramNodeData>).First(x => x.Key == linkData.From);
+                var toData = (diagram.Model.NodesSource as ObservableCollection<ClassDiagramNodeData>).First(x => x.Key == linkData.To);
+                var isValid = CheckLink(fromData, toData, linkData, category: linkData.Category);
+                if (isValid)
+                {
+                    (diagram.LinksSource as ObservableCollection<ClassDiagramLinkData>).Add(linkData);
+                }
+            }
         }
+
 
         private void LinkTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedValue = (sender as ComboBox).SelectedValue as string;
+            String selectedValue = (sender as ComboBox).SelectedValue as String;
             SelectedLinkType = selectedValue ?? SelectedLinkType;
         }
 
@@ -312,27 +319,95 @@ namespace ProcessConfigurationManager.WPF.UML
         private void diagram_LinkDrawn(object sender, Northwoods.GoXam.DiagramEventArgs e)
         {
             Link link = (e.Part as Link);
-            (link.Data as ClassDiagramLinkData).Category = SelectedLinkType;
-            var linkData = link.Data as ClassDiagramLinkData;
-            var fromData = link.FromData as ClassDiagramNodeData;
-            var toData = link.ToData as ClassDiagramNodeData;
+            ClassDiagramLinkData linkData = link.Data as ClassDiagramLinkData;
+            ClassDiagramNodeData fromData = link.FromData as ClassDiagramNodeData;
+            ClassDiagramNodeData toData = link.ToData as ClassDiagramNodeData;
 
-            CheckLink(fromData, toData, linkData);
+            var isValid = CheckLink(fromData, toData, linkData, category: SelectedLinkType);
+            if (!isValid)
+            {
+                (diagram.LinksSource as ObservableCollection<ClassDiagramLinkData>).Remove(linkData);
+            }
         }
+
+        private bool IsLinkUnique(ClassDiagramLinkData linkData, string category)
+        {
+            if ((diagram.LinksSource as ObservableCollection<ClassDiagramLinkData>)
+                .Count(x => x.From == linkData.From && x.To == linkData.To && x.Category == category) > 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool IsLinkUniqueBothWays(ClassDiagramLinkData linkData, string category)
+        {
+            int count1 = (diagram.LinksSource as ObservableCollection<ClassDiagramLinkData>)
+                .Count(x => x.From == linkData.From && x.To == linkData.To && x.Category == category);
+            int count2 = (diagram.LinksSource as ObservableCollection<ClassDiagramLinkData>)
+                .Count(x => x.From == linkData.To && x.To == linkData.From && x.Category == category);
+            return count1 + count2 < 2;
+        }
+
+
 
         private void diagram_LinkRelinked(object sender, DiagramEventArgs e)
         {
             Link link = (e.Part as Link);
-            var linkData = link.Data as ClassDiagramLinkData;
-            var fromData = link.FromData as ClassDiagramNodeData;
-            var toData = link.ToData as ClassDiagramNodeData;
+            ClassDiagramLinkData linkData = link.Data as ClassDiagramLinkData;
+            ClassDiagramNodeData fromData = link.FromData as ClassDiagramNodeData;
+            ClassDiagramNodeData toData = link.ToData as ClassDiagramNodeData;
 
-            CheckLink(fromData, toData, linkData);
+            var isValid = CheckLink(fromData, toData, linkData, linkData.Category);
+            if (!isValid)
+            {
+                (diagram.LinksSource as ObservableCollection<ClassDiagramLinkData>).Remove(linkData);
+            }
         }
 
-        private void CheckLink(ClassDiagramNodeData fromData, ClassDiagramNodeData toData, ClassDiagramLinkData linkData)
+        private bool CheckLink(ClassDiagramNodeData fromData, ClassDiagramNodeData toData, ClassDiagramLinkData linkData, string category)
         {
-            // TODO
+            if (category == Constants.UML_CD_ANCHOR)
+            {
+                if ((fromData.Category == Constants.UML_CD_NOTE || toData.Category == Constants.UML_CD_NOTE) && fromData.Category != toData.Category)
+                {
+                    linkData.Category = category;
+                    linkData.Color = Constants.VALID_COLOR;
+
+                    return IsLinkUniqueBothWays(linkData, category);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (fromData.Category == Constants.UML_CD_NOTE || toData.Category == Constants.UML_CD_NOTE)
+            {
+                return false;
+            }
+            else
+            {
+                string relationship = Uml4Upmm.CheckCDRelationship(fromData.IRI, toData.IRI, ClassDiagramPage.IsValidatingWithModel, out string color, category);
+
+                if (relationship == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    linkData.Category = category;
+                    linkData.FromText = "";
+                    linkData.ToText = "";
+                    linkData.Text = relationship == "" ? relationship : "<<" + relationship + ">>";
+                    linkData.Color = color;
+                }
+            }
+            return IsLinkUnique(linkData, category);
+
+
         }
 
     }
@@ -365,7 +440,8 @@ namespace ProcessConfigurationManager.WPF.UML
                 return false;
             }
 
-            return base.IsValidLink(fromnode, fromport, tonode, toport);
+            return true;
+            //return base.IsValidLink(fromnode, fromport, tonode, toport);
         }
     }
 

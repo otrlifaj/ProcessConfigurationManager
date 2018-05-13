@@ -789,11 +789,349 @@ namespace ProcessConfigurationManager.WPF.UML
 
         }
 
-        public string CheckCDRelationship(string sourceIRI, string targetIRI, bool validation, out string color, string sourceNodeCategory, string targetNodeCategory)
+        public string CheckCDRelationship(string sourceIRI, string targetIRI, bool validation, out string color, string linkType)
         {
-            // TODO
-            color = "Black";
+            color = Constants.VALID_COLOR;
+            SoftwareProcessElement sourceElement = softwareProcess.FirstOrDefault(x => x.IRI == sourceIRI);
+            SoftwareProcessElement targetElement = softwareProcess.FirstOrDefault(x => x.IRI == targetIRI);
+
+            if (sourceElement == null || targetElement == null)
+            {
+                return null;
+            }
+            else if (linkType == Constants.UML_CD_ASSOCIATION)
+            {
+                return CheckCDAssociation(sourceElement, targetElement, validation, out color);
+            }
+            else if (linkType == Constants.UML_CD_GENERALIZATION)
+            {
+                return CheckCDGeneralization(sourceElement, targetElement, validation, out color);
+            }
+            else if (linkType == Constants.UML_CD_AGGREGATION)
+            {
+                return CheckCDAggregation(sourceElement, targetElement, validation, out color);
+            }
+            else if (linkType == Constants.UML_CD_ANCHOR)
+            {
+                return CheckCDAnchor(sourceElement, targetElement, validation, out color);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private string CheckCDAnchor(SoftwareProcessElement sourceElement, SoftwareProcessElement targetElement, bool validation, out string color)
+        {
+            color = Constants.VALID_COLOR;
+            return "";
+        }
+
+        private string CheckCDGeneralization(SoftwareProcessElement sourceElement, SoftwareProcessElement targetElement, bool validation, out string color)
+        {
+            color = Constants.VALID_COLOR;
+            if (sourceElement is Information)
+            {
+                if (targetElement is Information)
+                {
+                    return ValidCDRelationship("", out color);
+                }
+            }
+            else if (sourceElement is Artifact || sourceElement is Material || sourceElement is Document)
+            {
+                if (targetElement is Artifact || targetElement is Material || targetElement is Document)
+                {
+                    return ValidCDRelationship("", out color);
+                }
+            }
+            else if (sourceElement is HumanResource)
+            {
+                if (targetElement is HumanResource)
+                {
+                    return ValidCDRelationship("", out color);
+                }
+            }
+            else if (sourceElement is InanimateResource)
+            {
+                if (targetElement is InanimateResource)
+                {
+                    return ValidCDRelationship("", out color);
+                }
+            }
+
             return null;
+
+        }
+
+        private string CheckCDAssociation(SoftwareProcessElement sourceElement, SoftwareProcessElement targetElement, bool validation, out string color)
+        {
+            color = Constants.VALID_COLOR;
+            if (sourceElement is Entity)
+            {
+                if (targetElement is Context)
+                {
+                    if ((sourceElement as Entity).IsInContext.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("is in context", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("is in context", out color);
+                    }
+                }
+                else if (targetElement is Goal)
+                {
+                    if ((sourceElement as Entity).ResultsIn.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("results in", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("results in", out color);
+                    }
+                }
+                else if (targetElement is Entity)
+                {
+                    if ((sourceElement as Entity).InteractsWith.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("interacts with", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("interacts with", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Context)
+            {
+                if (targetElement is Intention)
+                {
+                    if ((sourceElement as Context).Satisfies.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("satisfies", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("satisfies", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Argument)
+            {
+                if (targetElement is Alternative)
+                {
+                    if ((sourceElement as Argument).Supports.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("supports", out color);
+                    }
+                    else if ((sourceElement as Argument).ObjectsTo.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("objects to", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Role)
+            {
+                if (targetElement is Alternative)
+                {
+                    if ((sourceElement as Role).Selects.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("selects", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("selects", out color);
+                    }
+                }
+                else if (targetElement is UPMM.Object)
+                {
+                    if ((sourceElement as Role).ResponsibleFor.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("is responsible for", out color);
+                    }
+                    else if (targetElement is Entity)
+                    {
+                        if ((sourceElement as Role).Modifies.Contains(targetElement))
+                        {
+                            return ValidCDRelationship("modifies", out color);
+                        }
+                        else
+                        {
+                            return validation ? null : InvalidCDRelationship("modifies", out color);
+                        }
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("is responsible for", out color);
+                    }
+                }
+                else if (targetElement is Competence)
+                {
+                    if ((sourceElement as Role).Specifies.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("specifies", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("specifies", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Alternative)
+            {
+                if (targetElement is Issue)
+                {
+                    if ((sourceElement as Alternative).RespondsTo.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("responds to", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("responds to", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Issue)
+            {
+                if (targetElement is Entity)
+                {
+                    if ((sourceElement as Issue).Reviews.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("reviews", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("reviews", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Intention)
+            {
+                if (targetElement is Goal)
+                {
+                    if ((sourceElement as Intention).Concretizes.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("concretizes", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("concretizes", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Competence)
+            {
+                if (targetElement is Law)
+                {
+                    if ((sourceElement as Competence).Checks.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("checks", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("checks", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Resource)
+            {
+                if (targetElement is Entity)
+                {
+                    if ((sourceElement as Resource).Processes.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("processes", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("processes", out color);
+                    }
+                }
+                else if (sourceElement is HumanResource && targetElement is HumanResource)
+                {
+                    if ((sourceElement as HumanResource).IsOrganizedWith.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("is organized with", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("is organized with", out color);
+                    }
+                }
+                else if (targetElement is Role)
+                {
+                    if ((sourceElement as Resource).PlaysRole.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("plays role", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("plays role", out color);
+                    }
+                }
+                else if (targetElement is Competence)
+                {
+                    if ((sourceElement as Resource).Provides.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("provides", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("provides", out color);
+                    }
+                }
+            }
+            return null;
+        }
+
+        private string CheckCDAggregation(SoftwareProcessElement sourceElement, SoftwareProcessElement targetElement, bool validation, out string color)
+        {
+            color = Constants.VALID_COLOR;
+            if (sourceElement is Group)
+            {
+                if (targetElement is Role)
+                {
+                    if ((sourceElement as Group).ConsistsOf.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("consists of", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("consists of", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Artifact || sourceElement is Material || sourceElement is Document)
+            {
+                if (targetElement is Entity)
+                {
+                    if ((sourceElement as Artifact).PartiallyConsistsOf.Contains(targetElement))
+                    {
+                        return ValidCDRelationship("consists of", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidCDRelationship("consists of", out color);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private string ValidCDRelationship(string relationship, out string color)
+        {
+            color = Constants.VALID_COLOR;
+            return relationship;
+        }
+
+        private string InvalidCDRelationship(string relationship, out string color)
+        {
+            color = Constants.INVALID_COLOR;
+            return relationship;
         }
     }
 }

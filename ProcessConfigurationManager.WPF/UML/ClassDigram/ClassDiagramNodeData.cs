@@ -38,13 +38,18 @@ namespace ProcessConfigurationManager.WPF.UML
             var type = processElement.GetType();
             var properties = type.GetProperties();
 
-            List<String> ignoredProperties = new List<string> { "IRI", "Name", "Description", "Type" };
+            var ignoredProperties = new List<string> { "IRI", "Name", "Description", "Type" };
             var classSpecificProperties = properties.Where(p => !ignoredProperties.Contains(p.Name)).ToList();
 
-            foreach (var p in classSpecificProperties)
+            _Attributes.AddRange(classSpecificProperties.Select(p => p.Name));
+
+            var parametersField = type.GetFields().FirstOrDefault(f => f.Name == "Parameters");
+            if (parametersField != null)
             {
-                _Attributes.Add(p.Name);  
+                List<Parameter> parameterList = parametersField.GetValue(processElement) as List<Parameter>;
+                _Attributes.AddRange(parameterList.Select(p => p.Name));
             }
+
         }
     }
 }

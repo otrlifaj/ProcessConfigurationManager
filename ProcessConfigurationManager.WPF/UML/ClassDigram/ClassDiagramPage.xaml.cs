@@ -32,7 +32,7 @@ namespace ProcessConfigurationManager.WPF.UML
         protected GraphLinksModel<ClassDiagramNodeData, String, String, ClassDiagramLinkData> DiagramModel { get; set; }
         private List<LinkTypeComboBoxItem> LinkTypes { get; set; }
         private string SelectedLinkType { get; set; }
-
+        private ClassDiagramNodeData NodeToEdit { get; set; }
         public static Boolean IsValidatingWithModel { get; set; } = false;
         public static Boolean AllowDuplicateNodes { get; set; } = false;
 
@@ -47,7 +47,6 @@ namespace ProcessConfigurationManager.WPF.UML
                 new LinkTypeComboBoxItem(4, Constants.UML_CD_ANCHOR)
             };
             SelectedLinkType = LinkTypes.First().Name;
-
             linkTypeComboBox.ItemsSource = LinkTypes.OrderBy(item => item.Id);
             linkTypeComboBox.DisplayMemberPath = "Name";
             linkTypeComboBox.SelectedValuePath = "Name";
@@ -224,7 +223,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 var loadedModel = new GraphLinksModel<ClassDiagramNodeData, string, string, ClassDiagramLinkData>();
                 loadedModel.Load<ClassDiagramNodeData, ClassDiagramLinkData>(diagramXml, Constants.UML_CD_XML_NODE_STRING, Constants.UML_CD_XML_LINK_STRING);
 
-                string[] categories = { "Class", "Note" };
+                string[] categories = { "Class" };
                 int countOfMissing = 0;
                 foreach (string IRI in (loadedModel.NodesSource as ObservableCollection<ClassDiagramNodeData>).Where(x => categories.Contains(x.Category)).Select(x => x.IRI))
                 {
@@ -410,6 +409,60 @@ namespace ProcessConfigurationManager.WPF.UML
 
         }
 
+        private void addNewAttributeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Node node = Part.FindAncestor<Node>(e.OriginalSource as UIElement);
+            if (node == null) return;
+
+            NodeToEdit = node.Data as ClassDiagramNodeData;
+            AttributeInputBox.Visibility = Visibility.Visible;
+        }
+
+        private void cancelAddAttribute_Click(object sender, RoutedEventArgs e)
+        {
+            AttributeInputBox.Visibility = Visibility.Collapsed;
+            AttributeNameInputTextBox.Text = String.Empty;
+        }
+
+        private void addAttribute_Click(object sender, RoutedEventArgs e)
+        {
+            AttributeInputBox.Visibility = Visibility.Collapsed;
+            String attributeName = AttributeNameInputTextBox.Text;
+            if (attributeName != null && attributeName != "")
+            {
+                NodeToEdit.Attributes.Add(attributeName);
+            }
+            AttributeNameInputTextBox.Text = String.Empty;
+        }
+
+        private void editNoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Node node = Part.FindAncestor<Node>(e.OriginalSource as UIElement);
+            if (node == null) return;
+
+            NodeToEdit = node.Data as ClassDiagramNodeData;
+            NoteNameInputTextBox.Text = NodeToEdit.Name;
+            NoteTextInputTextBox.Text = NodeToEdit.Text;
+            EditNoteInputBox.Visibility = Visibility.Visible;
+        }
+
+        private void SaveNoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            EditNoteInputBox.Visibility = Visibility.Collapsed;
+            String noteName = NoteNameInputTextBox.Text;
+            String noteText = NoteTextInputTextBox.Text;
+            NodeToEdit.Name = noteName;
+            NodeToEdit.Text = noteText;
+            NoteNameInputTextBox.Text = String.Empty;
+            NoteTextInputTextBox.Text = String.Empty;
+        }
+
+        private void CancelSaveNoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            EditNoteInputBox.Visibility = Visibility.Collapsed;
+            NoteNameInputTextBox.Text = String.Empty;
+            NoteTextInputTextBox.Text = String.Empty;
+        }
     }
 
     internal class LinkTypeComboBoxItem

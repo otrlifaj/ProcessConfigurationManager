@@ -16,7 +16,7 @@ namespace ProcessConfigurationManager.WPF.UML
         public ActivityDiagramNodeData(SoftwareProcessElement processElement, String category)
             : base(processElement, category)
         {
-            if (category=="Swimlane")
+            if (category==Constants.UML_AD_SWIMLANE)
             {
                 this.IsSubGraph = true;
             }

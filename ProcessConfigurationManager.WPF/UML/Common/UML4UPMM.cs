@@ -9,7 +9,7 @@ namespace ProcessConfigurationManager.WPF.UML
     {
         private Dictionary<UPMMTypes, List<String>> ActivityDiagramNodeDataMappingRules;
         private Dictionary<UPMMTypes, List<String>> ClassDiagramNodeDataMappingRules;
-
+        private Dictionary<UPMMTypes, List<String>> UseCaseDiagramNodeDataMappingRules;
         private List<SoftwareProcessElement> softwareProcess;
 
 
@@ -17,6 +17,7 @@ namespace ProcessConfigurationManager.WPF.UML
         {
             InitADMappingRules();
             InitCDMappingRules();
+            InitUCDMappingRules();
             this.softwareProcess = softwareProcess;
         }
 
@@ -24,36 +25,36 @@ namespace ProcessConfigurationManager.WPF.UML
         {
             ActivityDiagramNodeDataMappingRules = new Dictionary<UPMMTypes, List<String>>()
             {
-                {UPMMTypes.Task, new List<String>() { "Activity" } },
-                {UPMMTypes.Alternative, new List<String>() { "Activity" } },
-                {UPMMTypes.Process, new List<String>() { "Activity" } },
+                {UPMMTypes.Task, new List<String>() { Constants.UML_AD_ACTIVITY } },
+                {UPMMTypes.Alternative, new List<String>() { Constants.UML_AD_ACTIVITY } },
+                {UPMMTypes.Process, new List<String>() { Constants.UML_AD_ACTIVITY } },
 
-                {UPMMTypes.Role, new List<String>() { "Object" } },
-                {UPMMTypes.Group, new List<String>() { "Object" } },
-                {UPMMTypes.Competence, new List<String>() { "Object" } },
-                {UPMMTypes.Law, new List<String>() { "Object" } },
+                {UPMMTypes.Role, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.Group, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.Competence, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.Law, new List<String>() { Constants.UML_AD_OBJECT } },
 
 
-                {UPMMTypes.Object, new List<String>() { "Object" } },
+                {UPMMTypes.Object, new List<String>() { Constants.UML_AD_OBJECT } },
 
-                {UPMMTypes.Entity, new List<String>() { "Object" } },
-                {UPMMTypes.Information, new List<String>() { "Object" } },
-                {UPMMTypes.Artifact, new List<String>() { "Object" } },
-                {UPMMTypes.Material, new List<String>() { "Object" } },
-                {UPMMTypes.Document, new List<String>() { "Object" } },
+                {UPMMTypes.Entity, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.Information, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.Artifact, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.Material, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.Document, new List<String>() { Constants.UML_AD_OBJECT } },
 
-                {UPMMTypes.Resource, new List<String>() { "Object" } },
-                {UPMMTypes.HumanResource, new List<String>() { "Object" } },
-                {UPMMTypes.InanimateResource, new List<String>() { "Object" } },
+                {UPMMTypes.Resource, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.HumanResource, new List<String>() { Constants.UML_AD_OBJECT } },
+                {UPMMTypes.InanimateResource, new List<String>() { Constants.UML_AD_OBJECT } },
 
-                {UPMMTypes.Event, new List<String>() { "Send Signal Action", "Accept Event Action" } },
-                {UPMMTypes.Issue, new List<String>() { "Send Signal Action", "Accept Event Action" } },
+                {UPMMTypes.Event, new List<String>() { Constants.UML_AD_SEND_SIGNAL_ACTION, Constants.UML_AD_ACCEPT_EVENT_ACTION } },
+                {UPMMTypes.Issue, new List<String>() { Constants.UML_AD_SEND_SIGNAL_ACTION, Constants.UML_AD_ACCEPT_EVENT_ACTION } },
 
-                {UPMMTypes.Context, new List<String>() { "Swimlane" } },
+                {UPMMTypes.Context, new List<String>() { Constants.UML_AD_SWIMLANE } },
 
-                {UPMMTypes.Goal, new List<String>() { "Note" } },
-                {UPMMTypes.Intention, new List<String>() { "Note" } },
-                {UPMMTypes.Argument, new List<String>() { "Note" } }
+                {UPMMTypes.Goal, new List<String>() { Constants.UML_AD_NOTE } },
+                {UPMMTypes.Intention, new List<String>() { Constants.UML_AD_NOTE } },
+                {UPMMTypes.Argument, new List<String>() { Constants.UML_AD_NOTE } }
             };
         }
 
@@ -61,32 +62,67 @@ namespace ProcessConfigurationManager.WPF.UML
         {
             ClassDiagramNodeDataMappingRules = new Dictionary<UPMMTypes, List<string>>()
             {
-                {UPMMTypes.Context, new List<String>() {"Class"}},
+                {UPMMTypes.Context, new List<String>() {Constants.UML_CD_CLASS}},
 
-                {UPMMTypes.Object, new List<String>() {"Class"}},
+                {UPMMTypes.Object, new List<String>() {Constants.UML_CD_CLASS}},
 
-                {UPMMTypes.Entity, new List<String>() {"Class"}},
-                {UPMMTypes.Information, new List<String>() {"Class"}},
-                {UPMMTypes.Artifact, new List<String>() {"Class"}},
-                {UPMMTypes.Material, new List<String>() {"Class"}},
-                {UPMMTypes.Document, new List<String>() {"Class"}},
+                {UPMMTypes.Entity, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Information, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Artifact, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Material, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Document, new List<String>() {Constants.UML_CD_CLASS}},
 
-                {UPMMTypes.Resource, new List<String>() {"Class"}},
-                {UPMMTypes.HumanResource, new List<String>() {"Class"}},
-                {UPMMTypes.InanimateResource, new List<String>() {"Class"}},
+                {UPMMTypes.Resource, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.HumanResource, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.InanimateResource, new List<String>() {Constants.UML_CD_CLASS}},
 
-                {UPMMTypes.Alternative, new List<String>() {"Class"}},
-                {UPMMTypes.Argument, new List<String>() {"Class"}},
-                {UPMMTypes.Issue, new List<String>() {"Class"}},
-                {UPMMTypes.Intention, new List<String>() {"Class"}},
-                {UPMMTypes.Goal, new List<String>() {"Class"}},
-                {UPMMTypes.Competence, new List<String>() {"Class"}},
-                {UPMMTypes.Role, new List<String>() {"Class"}},
-                {UPMMTypes.Group, new List<String>() {"Class"}},
-                {UPMMTypes.Law, new List<String>() {"Class"}},
+                {UPMMTypes.Alternative, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Argument, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Issue, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Intention, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Goal, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Competence, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Role, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Group, new List<String>() {Constants.UML_CD_CLASS}},
+                {UPMMTypes.Law, new List<String>() {Constants.UML_CD_CLASS}},
 
             };
 
+        }
+
+        private void InitUCDMappingRules()
+        {
+            UseCaseDiagramNodeDataMappingRules = new Dictionary<UPMMTypes, List<string>>()
+            {
+                {UPMMTypes.Task, new List<String>() {Constants.UML_UCD_USE_CASE}},
+                {UPMMTypes.Process, new List<String>() {Constants.UML_UCD_USE_CASE}},
+                {UPMMTypes.Alternative, new List<String>() {Constants.UML_UCD_USE_CASE}},
+
+                {UPMMTypes.Resource, new List<String>() {Constants.UML_UCD_ACTOR}},
+                {UPMMTypes.HumanResource, new List<String>() {Constants.UML_UCD_ACTOR}},
+                {UPMMTypes.InanimateResource, new List<String>() {Constants.UML_UCD_ACTOR}},
+
+                {UPMMTypes.Role, new List<String>() {Constants.UML_UCD_ACTOR}},
+                {UPMMTypes.Group, new List<String>() {Constants.UML_UCD_ACTOR}},
+
+                {UPMMTypes.Law, new List<String>() {Constants.UML_UCD_ACTOR}},
+
+                {UPMMTypes.Goal, new List<String>() {Constants.UML_UCD_NOTE}},
+                {UPMMTypes.Competence, new List<String>() {Constants.UML_UCD_NOTE}},
+
+                {UPMMTypes.Entity, new List<String>() {Constants.UML_UCD_NOTE}},
+                {UPMMTypes.Information, new List<String>() {Constants.UML_UCD_NOTE}},
+                {UPMMTypes.Artifact, new List<String>() {Constants.UML_UCD_NOTE}},
+                {UPMMTypes.Material, new List<String>() {Constants.UML_UCD_NOTE}},
+                {UPMMTypes.Document, new List<String>() {Constants.UML_UCD_NOTE}},
+
+                {UPMMTypes.Argument, new List<String>() {Constants.UML_UCD_NOTE}},
+                {UPMMTypes.ProcessStep, new List<String>() {Constants.UML_UCD_NOTE}},
+
+                {UPMMTypes.Context, new List<String>() {Constants.UML_UCD_SYSTEM}},
+                {UPMMTypes.Intention, new List<String>() {Constants.UML_UCD_SYSTEM}},
+
+            };
         }
 
         public List<ClassDiagramNodeData> MapUPMMToClassDiagramNodeData()
@@ -142,7 +178,7 @@ namespace ProcessConfigurationManager.WPF.UML
 
             if (sourceElement == null || targetElement == null)
             {
-                color = "Black";
+                color = Constants.VALID_COLOR;
                 return null;
             }
 
@@ -154,12 +190,12 @@ namespace ProcessConfigurationManager.WPF.UML
 
                     if ((sourceElement as Alternative).ContributesTo.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "contributes to";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
                         if (validation)
                         {
 
@@ -181,7 +217,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Argument).Supports.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "supports";
                     }
                     else if ((sourceElement as Argument).ObjectsTo.Contains(targetElement))
@@ -191,7 +227,7 @@ namespace ProcessConfigurationManager.WPF.UML
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
                         if (validation)
                         {
                             return null;
@@ -212,12 +248,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Competence).Checks.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "checks";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
                         if (validation)
                         {
                             return null;
@@ -237,22 +273,22 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Entity).MandatoryInputTo.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "mandatory input";
                     }
                     else if ((sourceElement as UPMM.Entity).OptionalInputTo.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "optional input";
                     }
                     else if ((sourceElement as UPMM.Entity).InputTo.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "input";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
                         if (validation)
                         {
                             return null;
@@ -267,12 +303,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Entity).ResultsIn.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "results in";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -293,12 +329,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Event).ReceiveSignal.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "activates";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -319,12 +355,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Intention).Concretizes.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "concretizes";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -345,12 +381,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Issue).HasResponse.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "has response";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -371,12 +407,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Law).Controls.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "controls";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -397,12 +433,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Object).UsedIn.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "is used in";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -423,12 +459,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.ProcessStep).Decides.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "decides";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -444,12 +480,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.ProcessStep).Raises.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "raises";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -487,7 +523,7 @@ namespace ProcessConfigurationManager.WPF.UML
                     }
                     if (count == 0)
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
                         if (validation)
                         {
                             return null;
@@ -502,20 +538,20 @@ namespace ProcessConfigurationManager.WPF.UML
                         switch (type)
                         {
                             case CooperationType.IsPrecededBy:
-                                color = "Black";
+                                color = Constants.VALID_COLOR;
                                 return "precedes";
                                 break;
                             case CooperationType.IsFollowedBy:
-                                color = "Black";
+                                color = Constants.VALID_COLOR;
                                 return "is followed by";
                                 break;
                             case CooperationType.Interrupts:
-                                color = "Black";
+                                color = Constants.VALID_COLOR;
                                 return "interrupts";
                                 break;
                             default:
                                 {
-                                    color = "Red";
+                                    color = Constants.INVALID_COLOR;
                                     if (validation)
                                     {
                                         return null;
@@ -537,12 +573,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Process).SendSignal.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "sends signal";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -559,12 +595,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Process).Realizes.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "realizes";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -586,12 +622,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Resource).Provides.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "provides";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -607,12 +643,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Resource).PlaysRole.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "plays";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -628,12 +664,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Resource).Processes.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "processes";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -654,12 +690,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Role).Performs.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "performs";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -675,12 +711,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Role).Selects.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "selects";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -696,12 +732,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Role).Specifies.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "specifies";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -717,12 +753,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Role).ResponsibleFor.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "is responsible for";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -744,12 +780,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Task).SendSignal.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "sends signal";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -765,12 +801,12 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as UPMM.Task).Output.Contains(targetElement))
                     {
-                        color = "Black";
+                        color = Constants.VALID_COLOR;
                         return "output";
                     }
                     else
                     {
-                        color = "Red";
+                        color = Constants.INVALID_COLOR;
 
                         if (validation)
                         {
@@ -784,7 +820,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 }
             }
             #endregion
-            color = "Black";
+            color = Constants.VALID_COLOR;
             return null;
 
         }

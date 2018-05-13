@@ -204,6 +204,10 @@ namespace ProcessConfigurationManager.WPF.UML
 
             try
             {
+                if (diagramXml == null)
+                {
+                    return;
+                }
                 if (diagramXml.Name != Constants.UML_CD_XML_ROOT_STRING)
                 {
                     throw new ProcessManagerException("This file cannot be imported, because it contains different diagram type data.");

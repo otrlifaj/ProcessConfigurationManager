@@ -19,10 +19,6 @@ namespace ProcessConfigurationManager.WPF.UML
     /// </summary>
     public partial class ActivityDiagramPage : Page
     {
-        private const string XML_LINK_STRING = "Link";
-        private const string XML_NODE_STRING = "Node";
-        private const string XML_ROOT_STRING = "KOTRActivityDiagram";
-        private const string XML_VALIDATION_ATRIBUTE_STRING = "validation";
         private List<UPMM.SoftwareProcessElement> softwareProcessProfile = null;
         private List<ActivityDiagramNodeData> paletteModel = null;
         private UML4UPMM uml4upmm = null;
@@ -49,12 +45,12 @@ namespace ProcessConfigurationManager.WPF.UML
             flowPalette.Model = new GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>();
             flowPalette.Model.NodesSource = new List<ActivityDiagramNodeData>()
             {
-                new ActivityDiagramNodeData() { Key="Initial Activity", Category="Initial Activity", Name="Initial Activity"},
-                new ActivityDiagramNodeData() { Key="Final Activity", Category="Final Activity", Name="Final Activity"},
-                new ActivityDiagramNodeData() { Key="Decision", Category="Decision", Name="Decision"},
-                new ActivityDiagramNodeData() { Key="Decision Merge", Category="Decision Merge", Name="Decision Merge"},
-                new ActivityDiagramNodeData() { Key="Fork", Category="Fork", Name="Fork"},
-                new ActivityDiagramNodeData() { Key="Join", Category="Join", Name="Join"},
+                new ActivityDiagramNodeData() { Key=Constants.UML_AD_INITIAL_ACTIVITY, Category=Constants.UML_AD_INITIAL_ACTIVITY, Name=Constants.UML_AD_INITIAL_ACTIVITY},
+                new ActivityDiagramNodeData() { Key=Constants.UML_AD_FINAL_ACTIVITY, Category=Constants.UML_AD_FINAL_ACTIVITY, Name=Constants.UML_AD_FINAL_ACTIVITY},
+                new ActivityDiagramNodeData() { Key=Constants.UML_AD_DECISION, Category=Constants.UML_AD_DECISION, Name=Constants.UML_AD_DECISION},
+                new ActivityDiagramNodeData() { Key=Constants.UML_AD_DECISION_MERGE, Category=Constants.UML_AD_DECISION_MERGE, Name=Constants.UML_AD_DECISION_MERGE},
+                new ActivityDiagramNodeData() { Key=Constants.UML_AD_FORK, Category=Constants.UML_AD_FORK, Name=Constants.UML_AD_FORK},
+                new ActivityDiagramNodeData() { Key=Constants.UML_AD_JOIN, Category=Constants.UML_AD_JOIN, Name=Constants.UML_AD_JOIN},
             };
 
             model.NodeKeyPath = "Key";
@@ -150,8 +146,8 @@ namespace ProcessConfigurationManager.WPF.UML
                 data = (sender as Diagram).SelectedNode.Data as ActivityDiagramNodeData;
 
             }
-            string[] categories = { "Activity", "Object", "Swimlane", "Note", "Send Signal Action", "Accept Event Action" };
-            if (data.Category == "Initial Activity" /*|| data.Category == "Final Activity"*/)
+            string[] categories = { Constants.UML_AD_ACTIVITY, Constants.UML_AD_OBJECT, Constants.UML_AD_SWIMLANE, Constants.UML_AD_NOTE, Constants.UML_AD_SEND_SIGNAL_ACTION, Constants.UML_AD_ACCEPT_EVENT_ACTION };
+            if (data.Category == Constants.UML_AD_INITIAL_ACTIVITY /*|| data.Category == Constants.UML_AD_FINAL_ACTIVITY*/)
             {
                 if ((sender as Diagram).Nodes.Where(x => (x.Data as ActivityDiagramNodeData).Category == data.Category).Count() > 1)
                 {
@@ -197,13 +193,13 @@ namespace ProcessConfigurationManager.WPF.UML
         private void CheckLink(ActivityDiagramNodeData fromData, ActivityDiagramNodeData toData, ActivityDiagramLinkData linkData)
         {
             //pokud je na některé straně hrany jeden z uzlů těchto typů, tak se hrana automaticky povoluje, jedná se o podporu toku, která není mapovaná z UPMM
-            if (fromData.Category == "Initial Activity" || toData.Category == "Final Activity"
-                || fromData.Category == "Decision" || toData.Category == "Decision"
-                || fromData.Category == "Decision Merge" || toData.Category == "Decision Merge"
-                || fromData.Category == "Fork" || toData.Category == "Fork"
-                || fromData.Category == "Join" || toData.Category == "Join")
+            if (fromData.Category == Constants.UML_AD_INITIAL_ACTIVITY || toData.Category == Constants.UML_AD_FINAL_ACTIVITY
+                || fromData.Category == Constants.UML_AD_DECISION || toData.Category == Constants.UML_AD_DECISION
+                || fromData.Category == Constants.UML_AD_DECISION_MERGE || toData.Category == Constants.UML_AD_DECISION_MERGE
+                || fromData.Category == Constants.UML_AD_FORK || toData.Category == Constants.UML_AD_FORK
+                || fromData.Category == Constants.UML_AD_JOIN || toData.Category == Constants.UML_AD_JOIN)
             {
-                linkData.Color = "Black";
+                linkData.Color = Constants.VALID_COLOR;
                 if (linkData.Guide == null || linkData.Guide == "")
                 {
                     linkData.Guide = "[Guide]";
@@ -219,7 +215,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 // metoda CheeckADRelationShip může vracet dvě možnosti
                 // 1. null - to znamená, že je ZAPNUTÁ validace a hrana není datově obsažena v profilu
                 // 2. ekvivalentní namapovaný vztah z UPMM a barvu pro hranu podle toho, jestli je hrana v profilu nebo není
-                string color = "Black";
+                string color = Constants.VALID_COLOR;
                 string relationship = uml4upmm.CheckADRelationship(fromData.IRI, toData.IRI, ActivityDiagramPage.IsValidatingWithModel, out color);
 
                 // možnost 1
@@ -249,16 +245,16 @@ namespace ProcessConfigurationManager.WPF.UML
         // metoda pro výběr typu hrany - anchor, object flow nebo control flow
         private void ChooseLinkCategory(ActivityDiagramNodeData fromData, ActivityDiagramNodeData toData, ActivityDiagramLinkData linkData)
         {
-            if ((fromData.Category == "Object" || toData.Category == "Object") && (fromData.Category != "Note" && toData.Category != "Note"))
+            if ((fromData.Category == Constants.UML_AD_OBJECT || toData.Category == Constants.UML_AD_OBJECT) && (fromData.Category != Constants.UML_AD_NOTE && toData.Category != Constants.UML_AD_NOTE))
             {
-                linkData.Category = "Object Flow";
+                linkData.Category = Constants.UML_AD_OBJECT_FLOW;
             }
-            else if (fromData.Category == "Note" || toData.Category == "Note")
+            else if (fromData.Category == Constants.UML_AD_NOTE || toData.Category == Constants.UML_AD_NOTE)
             {
-                linkData.Category = "Anchor";
+                linkData.Category = Constants.UML_AD_ANCHOR;
             }
             else
-                linkData.Category = "Control Flow";
+                linkData.Category = Constants.UML_AD_CONTROL_FLOW;
         }
 
         // metoda pro uložení diagramu do obrázku png
@@ -278,8 +274,8 @@ namespace ProcessConfigurationManager.WPF.UML
 
             var model = diagram.Model as GraphLinksModel<ActivityDiagramNodeData, String, String, ActivityDiagramLinkData>;
             if (model == null) return;
-            XElement root = model.Save<ActivityDiagramNodeData, ActivityDiagramLinkData>(XML_ROOT_STRING, XML_NODE_STRING, XML_LINK_STRING);
-            root.SetAttributeValue(XML_VALIDATION_ATRIBUTE_STRING, ValidationComboBox.SelectedIndex);
+            XElement root = model.Save<ActivityDiagramNodeData, ActivityDiagramLinkData>(Constants.UML_AD_XML_ROOT_STRING, Constants.UML_AD_XML_NODE_STRING, Constants.UML_AD_XML_LINK_STRING);
+            root.SetAttributeValue(Constants.UML_AD_XML_VALIDATION_ATTRIBUTE_STRING, ValidationComboBox.SelectedIndex);
 
             DiagramUtils diagramUtils = new DiagramUtils();
             diagramUtils.SaveDiagramDialog(root, "ActivityDiagram.kotr");
@@ -295,12 +291,16 @@ namespace ProcessConfigurationManager.WPF.UML
             var diagramXml = diagramUtils.LoadDiagramDialog();
             try
             {
-                if (diagramXml.Name != XML_ROOT_STRING)
+                if (diagramXml == null)
+                {
+                    return;
+                }
+                if (diagramXml.Name != Constants.UML_AD_XML_ROOT_STRING)
                 {
                     throw new ProcessManagerException("This file cannot be imported, because it contains different diagram type data.");
                 }
                 //vypnu validaci z UPMM(protože diagram může být uložený jako nevalidovaný)
-                var validationAttribute = diagramXml.Attribute(XML_VALIDATION_ATRIBUTE_STRING);
+                var validationAttribute = diagramXml.Attribute(Constants.UML_AD_XML_VALIDATION_ATTRIBUTE_STRING);
                 if (validationAttribute != null)
                 {
                     ValidationComboBox.SelectedIndex = Int32.Parse(validationAttribute.Value);
@@ -312,9 +312,9 @@ namespace ProcessConfigurationManager.WPF.UML
 
                 //zkontroluju, jestli všechny uzly, které mají IRI mají svůj elemnet v načteném profilu procesu
                 var loadedModel = new GraphLinksModel<ActivityDiagramNodeData, string, string, ActivityDiagramLinkData>();
-                loadedModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(diagramXml, XML_NODE_STRING, XML_LINK_STRING);
+                loadedModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(diagramXml, Constants.UML_AD_XML_NODE_STRING, Constants.UML_AD_XML_LINK_STRING);
 
-                string[] categories = { "Activity", "Object", "Swimlane", "Note", "Send Signal Action", "Accept Event Action" };
+                string[] categories = { Constants.UML_AD_ACTIVITY, Constants.UML_AD_OBJECT, Constants.UML_AD_SWIMLANE, Constants.UML_AD_NOTE, Constants.UML_AD_SEND_SIGNAL_ACTION, Constants.UML_AD_ACCEPT_EVENT_ACTION };
                 int countOfMissing = 0;
                 foreach (string IRI in (loadedModel.NodesSource as ObservableCollection<ActivityDiagramNodeData>).Where(x => categories.Contains(x.Category)).Select(x => x.IRI))
                 {
@@ -331,7 +331,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 else
                 {
                     //pokud všechny uzly s IRI mají své IRI v profilu, přidám diagram, 
-                    diagramModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(diagramXml, XML_NODE_STRING, XML_LINK_STRING);
+                    diagramModel.Load<ActivityDiagramNodeData, ActivityDiagramLinkData>(diagramXml, Constants.UML_AD_XML_NODE_STRING, Constants.UML_AD_XML_LINK_STRING);
                 }
 
             }
@@ -407,9 +407,9 @@ namespace ProcessConfigurationManager.WPF.UML
 
             foreach (var nodeData in originalNodesSource)
             {
-                if (nodeData.Category == "Swimlane" || nodeData.SubGraphKey == null || nodeData.SubGraphKey == "")
+                if (nodeData.Category == Constants.UML_AD_SWIMLANE || nodeData.SubGraphKey == null || nodeData.SubGraphKey == "")
                 {
-                    nodeData.BorderColor = "Black";
+                    nodeData.BorderColor = Constants.VALID_COLOR;
                     nodeData.Text = null;
                     continue;
                 }
@@ -428,12 +428,12 @@ namespace ProcessConfigurationManager.WPF.UML
                     int count = item.Executes.Where(x => x.IRI == nodeIRI).Count() + item.Satisfies.Where(x => x.IRI == nodeIRI).Count() + item.Scopes.Where(x => x.IRI == nodeIRI).Count();
                     if (count == 0)
                     {
-                        nodeData.BorderColor = "Red";
-                        nodeData.Text = "UNSUPPORTED";
+                        nodeData.BorderColor = Constants.INVALID_COLOR;
+                        nodeData.Text = Constants.UML_AD_UNSUPPORTED;
                     }
                     else
                     {
-                        nodeData.BorderColor = "Black";
+                        nodeData.BorderColor = Constants.VALID_COLOR;
                         nodeData.Text = null;
                     }
                 }
@@ -467,7 +467,7 @@ namespace ProcessConfigurationManager.WPF.UML
             {
                 if (group == null)
                 {
-                    (node.Data as ActivityDiagramNodeData).BorderColor = "Black";
+                    (node.Data as ActivityDiagramNodeData).BorderColor = Constants.VALID_COLOR;
                     (node.Data as ActivityDiagramNodeData).Text = null;
                     return true;
                 }
@@ -475,7 +475,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 if (node != null)
                 {
 
-                    if (node.Category == "Swimlane") return false;
+                    if (node.Category == Constants.UML_AD_SWIMLANE) return false;
                     string groupIRI = (group.Data as ActivityDiagramNodeData).IRI;
                     string nodeIRI = (node.Data as ActivityDiagramNodeData).IRI;
 
@@ -487,12 +487,12 @@ namespace ProcessConfigurationManager.WPF.UML
                             int count = item.Executes.Where(x => x.IRI == nodeIRI).Count() + item.Satisfies.Where(x => x.IRI == nodeIRI).Count() + item.Scopes.Where(x => x.IRI == nodeIRI).Count();
                             if (count == 0)
                             {
-                                (node.Data as ActivityDiagramNodeData).BorderColor = "Red";
-                                (node.Data as ActivityDiagramNodeData).Text = "UNSUPPORTED";
+                                (node.Data as ActivityDiagramNodeData).BorderColor = Constants.INVALID_COLOR;
+                                (node.Data as ActivityDiagramNodeData).Text = Constants.UML_AD_UNSUPPORTED;
                             }
                             else
                             {
-                                (node.Data as ActivityDiagramNodeData).BorderColor = "Black";
+                                (node.Data as ActivityDiagramNodeData).BorderColor = Constants.VALID_COLOR;
                                 (node.Data as ActivityDiagramNodeData).Text = null;
                             }
                         }
@@ -502,12 +502,12 @@ namespace ProcessConfigurationManager.WPF.UML
                             int count = item.Executes.Where(x => x.IRI == nodeIRI).Count() + item.Satisfies.Where(x => x.IRI == nodeIRI).Count() + item.Scopes.Where(x => x.IRI == nodeIRI).Count();
                             if (count == 0)
                             {
-                                (node.Data as ActivityDiagramNodeData).BorderColor = "Red";
+                                (node.Data as ActivityDiagramNodeData).BorderColor = Constants.INVALID_COLOR;
                                 (node.Data as ActivityDiagramNodeData).Text = null;
                             }
                             else
                             {
-                                (node.Data as ActivityDiagramNodeData).BorderColor = "Black";
+                                (node.Data as ActivityDiagramNodeData).BorderColor = Constants.VALID_COLOR;
                                 (node.Data as ActivityDiagramNodeData).Text = null;
                             }
                         }

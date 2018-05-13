@@ -13,13 +13,8 @@ namespace ProcessConfigurationManager.WPF.UML
 {
     public class DiagramUtils
     {
-        public List<String> ClassDiagramLinkTypes { get; private set; }
         public DiagramUtils()
         {
-            ClassDiagramLinkTypes = new List<String>
-            {
-                "Association", "Aggregation", "composition", "Generalization"
-            };
         }
 
         public BitmapSource MakeBitmap(DiagramPanel diagramPanel)

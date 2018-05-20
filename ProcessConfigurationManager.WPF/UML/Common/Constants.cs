@@ -50,6 +50,7 @@ namespace ProcessConfigurationManager.WPF.UML
         public static readonly string UML_UCD_ACTOR = "Actor";
         public static readonly string UML_UCD_USE_CASE = "Use Case";
         public static readonly string UML_UCD_NOTE = "Note";
+        public static readonly string UML_UCD_EDITABLE_NOTE = "Editable Note";
         public static readonly string UML_UCD_SYSTEM = "System";
         public static readonly string UML_UCD_XML_LINK_STRING = "Link";
         public static readonly string UML_UCD_XML_NODE_STRING = "Node";

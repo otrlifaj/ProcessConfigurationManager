@@ -18,6 +18,7 @@ using Northwoods.GoXam;
 using Northwoods.GoXam.Model;
 using Northwoods.GoXam.Tool;
 using ProcessConfigurationManager.UPMM;
+using ProcessConfigurationManager.WPF.UML.Common;
 
 namespace ProcessConfigurationManager.WPF.UML
 {
@@ -254,7 +255,7 @@ namespace ProcessConfigurationManager.WPF.UML
             }
         }
 
-        // metoda reagujícína zapnutí, vypnutí validace - kontrola existujícího modelu diagramu
+        // metoda reagující na zapnutí, vypnutí validace - kontrola existujícího modelu diagramu
         private void ValidationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ValidationComboBox.SelectedIndex == 1)
@@ -466,24 +467,6 @@ namespace ProcessConfigurationManager.WPF.UML
             EditNoteInputBox.Visibility = Visibility.Collapsed;
             NoteNameInputTextBox.Text = String.Empty;
             NoteTextInputTextBox.Text = String.Empty;
-        }
-    }
-
-    internal class LinkTypeComboBoxItem
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public LinkTypeComboBoxItem()
-        {
-
-        }
-
-        public LinkTypeComboBoxItem(int id, string name)
-        {
-            Id = id;
-            Name = name;
         }
     }
 

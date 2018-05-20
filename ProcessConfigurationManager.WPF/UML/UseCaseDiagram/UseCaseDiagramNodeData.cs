@@ -19,7 +19,10 @@ namespace ProcessConfigurationManager.WPF.UML
         public UseCaseDiagramNodeData(SoftwareProcessElement processElement, String category)
             : base(processElement, category)
         {
-
+            if (category == Constants.UML_UCD_SYSTEM)
+            {
+                this.IsSubGraph = true;
+            }
         }
 
     }

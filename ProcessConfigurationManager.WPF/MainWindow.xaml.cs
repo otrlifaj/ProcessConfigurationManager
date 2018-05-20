@@ -19,6 +19,7 @@ namespace ProcessConfigurationManager.WPF
         private About aboutPage = null;
         private ActivityDiagramPage activityDiagramPage = null;
         private ClassDiagramPage classDiagramPage = null;
+        private UseCaseDiagramPage useCaseDiagramPage = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -51,10 +52,11 @@ namespace ProcessConfigurationManager.WPF
                     softwareProcessProfile = OWLAPI.GetSoftwareProcess();
                     ActivityDiagram.IsEnabled = true;
                     ClassDiagram.IsEnabled = true;
+                    UseCaseDiagram.IsEnabled = true;
                     profileInfoLabel.Text = "Process profile file loaded";
                     profileInfoLabel.Foreground = Brushes.Green;
                     LoadProfile.IsEnabled = false;
-                    UnloadProfile.IsEnabled = true;                 
+                    UnloadProfile.IsEnabled = true;
                 }
                 catch (ApplicationException ex)
                 {
@@ -99,6 +101,23 @@ namespace ProcessConfigurationManager.WPF
             }
         }
 
+        private void UseCaseDiagramMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (useCaseDiagramPage == null)
+                {
+                    useCaseDiagramPage = new UseCaseDiagramPage(softwareProcessProfile);
+                }
+                ContentFrame.Navigate(useCaseDiagramPage);
+                statusLabel.Text = "Use Case Diagram";
+            }
+            catch (Exception ex)
+            {
+                new Utils().ShowExceptionMessageBox(ex);
+            }
+        }
+
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (aboutPage == null)
@@ -130,8 +149,12 @@ namespace ProcessConfigurationManager.WPF
             statusLabel.Text = null;
             profileInfoLabel.Text = "Process profile file not loaded";
             profileInfoLabel.Foreground = Brushes.Red;
+            ActivityDiagram.IsEnabled = false;
+            ClassDiagram.IsEnabled = false;
+            UseCaseDiagram.IsEnabled = false;
 
         }
+
 
     }
 }

@@ -89,6 +89,7 @@
     <Compile Include="UML\Common\Constants.cs" />
     <Compile Include="UML\Common\DiagramTools\SimpleLabelDraggingTool.cs" />
     <Compile Include="UML\Common\DiagramUtils.cs" />
+    <Compile Include="UML\Common\LinkTypeComboBoxItem.cs" />
     <Compile Include="UML\Common\ProcessManagerException.cs" />
     <Compile Include="UML\Common\UmlLinkData.cs" />
     <Compile Include="UML\Common\UmlNodeData.cs" />
@@ -96,6 +97,9 @@
     <Compile Include="UML\Common\UmlPage.cs" />
     <Compile Include="UML\UseCaseDiagram\UseCaseDiagramLinkData.cs" />
     <Compile Include="UML\UseCaseDiagram\UseCaseDiagramNodeData.cs" />
+    <Compile Include="UML\UseCaseDiagram\UseCaseDiagramPage.xaml.cs">
+      <DependentUpon>UseCaseDiagramPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
@@ -128,6 +132,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UML\ClassDigram\ClassDiagramPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UML\UseCaseDiagram\UseCaseDiagramPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

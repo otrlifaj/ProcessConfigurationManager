@@ -94,6 +94,8 @@
     <Compile Include="UML\Common\UmlNodeData.cs" />
     <Compile Include="UML\Common\UML4UPMM.cs" />
     <Compile Include="UML\Common\UmlPage.cs" />
+    <Compile Include="UML\UseCaseDiagram\UseCaseDiagramLinkData.cs" />
+    <Compile Include="UML\UseCaseDiagram\UseCaseDiagramNodeData.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
@@ -185,9 +187,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UML\UseCaseDiagram\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

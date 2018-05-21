@@ -38,11 +38,11 @@ namespace ProcessConfigurationManager.WPF.UML
         {
             base.LoadFromXElement(e);
             this.ArrowHeadColor = XHelper.Read("ArrowHeadColor", e, "White");
+            this.Points = XHelper.Read("Points", e, new List<System.Windows.Point> { });
         }
 
         public UseCaseDiagramLinkData() : this("", "", "Black", "White")
         {
-
         }
 
         public UseCaseDiagramLinkData(String category, String text, String color, String arrowHeadColor) : base(category, color, text)

@@ -901,28 +901,28 @@ namespace ProcessConfigurationManager.WPF.UML
             {
                 if (targetElement is Information)
                 {
-                    return ValidCDRelationship("", out color);
+                    return ValidRelationship("", out color);
                 }
             }
             else if (sourceElement is Artifact || sourceElement is Material || sourceElement is Document)
             {
                 if (targetElement is Artifact || targetElement is Material || targetElement is Document)
                 {
-                    return ValidCDRelationship("", out color);
+                    return ValidRelationship("", out color);
                 }
             }
             else if (sourceElement is HumanResource)
             {
                 if (targetElement is HumanResource)
                 {
-                    return ValidCDRelationship("", out color);
+                    return ValidRelationship("", out color);
                 }
             }
             else if (sourceElement is InanimateResource)
             {
                 if (targetElement is InanimateResource)
                 {
-                    return ValidCDRelationship("", out color);
+                    return ValidRelationship("", out color);
                 }
             }
 
@@ -939,33 +939,33 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Entity).IsInContext.Contains(targetElement))
                     {
-                        return ValidCDRelationship("is in context", out color);
+                        return ValidRelationship("is in context", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("is in context", out color);
+                        return validation ? null : InvalidRelationship("is in context", out color);
                     }
                 }
                 else if (targetElement is Goal)
                 {
                     if ((sourceElement as Entity).ResultsIn.Contains(targetElement))
                     {
-                        return ValidCDRelationship("results in", out color);
+                        return ValidRelationship("results in", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("results in", out color);
+                        return validation ? null : InvalidRelationship("results in", out color);
                     }
                 }
                 else if (targetElement is Entity)
                 {
                     if ((sourceElement as Entity).InteractsWith.Contains(targetElement))
                     {
-                        return ValidCDRelationship("interacts with", out color);
+                        return ValidRelationship("interacts with", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("interacts with", out color);
+                        return validation ? null : InvalidRelationship("interacts with", out color);
                     }
                 }
             }
@@ -975,11 +975,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Context).Satisfies.Contains(targetElement))
                     {
-                        return ValidCDRelationship("satisfies", out color);
+                        return ValidRelationship("satisfies", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("satisfies", out color);
+                        return validation ? null : InvalidRelationship("satisfies", out color);
                     }
                 }
             }
@@ -989,15 +989,15 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Argument).Supports.Contains(targetElement))
                     {
-                        return ValidCDRelationship("supports", out color);
+                        return ValidRelationship("supports", out color);
                     }
                     else if ((sourceElement as Argument).ObjectsTo.Contains(targetElement))
                     {
-                        return ValidCDRelationship("objects to", out color);
+                        return ValidRelationship("objects to", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("", out color);
+                        return validation ? null : InvalidRelationship("", out color);
                     }
                 }
             }
@@ -1007,44 +1007,44 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Role).Selects.Contains(targetElement))
                     {
-                        return ValidCDRelationship("selects", out color);
+                        return ValidRelationship("selects", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("selects", out color);
+                        return validation ? null : InvalidRelationship("selects", out color);
                     }
                 }
                 else if (targetElement is UPMM.Object)
                 {
                     if ((sourceElement as Role).ResponsibleFor.Contains(targetElement))
                     {
-                        return ValidCDRelationship("is responsible for", out color);
+                        return ValidRelationship("is responsible for", out color);
                     }
                     else if (targetElement is Entity)
                     {
                         if ((sourceElement as Role).Modifies.Contains(targetElement))
                         {
-                            return ValidCDRelationship("modifies", out color);
+                            return ValidRelationship("modifies", out color);
                         }
                         else
                         {
-                            return validation ? null : InvalidCDRelationship("modifies", out color);
+                            return validation ? null : InvalidRelationship("modifies", out color);
                         }
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("is responsible for", out color);
+                        return validation ? null : InvalidRelationship("is responsible for", out color);
                     }
                 }
                 else if (targetElement is Competence)
                 {
                     if ((sourceElement as Role).Specifies.Contains(targetElement))
                     {
-                        return ValidCDRelationship("specifies", out color);
+                        return ValidRelationship("specifies", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("specifies", out color);
+                        return validation ? null : InvalidRelationship("specifies", out color);
                     }
                 }
             }
@@ -1054,11 +1054,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Alternative).RespondsTo.Contains(targetElement))
                     {
-                        return ValidCDRelationship("responds to", out color);
+                        return ValidRelationship("responds to", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("responds to", out color);
+                        return validation ? null : InvalidRelationship("responds to", out color);
                     }
                 }
             }
@@ -1068,11 +1068,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Issue).Reviews.Contains(targetElement))
                     {
-                        return ValidCDRelationship("reviews", out color);
+                        return ValidRelationship("reviews", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("reviews", out color);
+                        return validation ? null : InvalidRelationship("reviews", out color);
                     }
                 }
             }
@@ -1082,11 +1082,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Intention).Concretizes.Contains(targetElement))
                     {
-                        return ValidCDRelationship("concretizes", out color);
+                        return ValidRelationship("concretizes", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("concretizes", out color);
+                        return validation ? null : InvalidRelationship("concretizes", out color);
                     }
                 }
             }
@@ -1096,11 +1096,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Competence).Checks.Contains(targetElement))
                     {
-                        return ValidCDRelationship("checks", out color);
+                        return ValidRelationship("checks", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("checks", out color);
+                        return validation ? null : InvalidRelationship("checks", out color);
                     }
                 }
             }
@@ -1110,44 +1110,44 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Resource).Processes.Contains(targetElement))
                     {
-                        return ValidCDRelationship("processes", out color);
+                        return ValidRelationship("processes", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("processes", out color);
+                        return validation ? null : InvalidRelationship("processes", out color);
                     }
                 }
                 else if (sourceElement is HumanResource && targetElement is HumanResource)
                 {
                     if ((sourceElement as HumanResource).IsOrganizedWith.Contains(targetElement))
                     {
-                        return ValidCDRelationship("is organized with", out color);
+                        return ValidRelationship("is organized with", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("is organized with", out color);
+                        return validation ? null : InvalidRelationship("is organized with", out color);
                     }
                 }
                 else if (targetElement is Role)
                 {
                     if ((sourceElement as Resource).PlaysRole.Contains(targetElement))
                     {
-                        return ValidCDRelationship("plays role", out color);
+                        return ValidRelationship("plays role", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("plays role", out color);
+                        return validation ? null : InvalidRelationship("plays role", out color);
                     }
                 }
                 else if (targetElement is Competence)
                 {
                     if ((sourceElement as Resource).Provides.Contains(targetElement))
                     {
-                        return ValidCDRelationship("provides", out color);
+                        return ValidRelationship("provides", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("provides", out color);
+                        return validation ? null : InvalidRelationship("provides", out color);
                     }
                 }
             }
@@ -1163,11 +1163,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Group).ConsistsOf.Contains(targetElement))
                     {
-                        return ValidCDRelationship("consists of", out color);
+                        return ValidRelationship("consists of", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("consists of", out color);
+                        return validation ? null : InvalidRelationship("consists of", out color);
                     }
                 }
             }
@@ -1177,11 +1177,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Artifact).PartiallyConsistsOf.Contains(targetElement))
                     {
-                        return ValidCDRelationship("consists of", out color);
+                        return ValidRelationship("consists of", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("consists of", out color);
+                        return validation ? null : InvalidRelationship("consists of", out color);
                     }
                 }
             }
@@ -1230,11 +1230,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Competence).Checks.Contains(targetElement))
                     {
-                        return ValidCDRelationship("checks", out color);
+                        return ValidRelationship("checks", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("checks", out color);
+                        return validation ? null : InvalidRelationship("checks", out color);
                     }
                 }
             }
@@ -1244,11 +1244,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Role).Specifies.Contains(targetElement))
                     {
-                        return ValidCDRelationship("specifies", out color);
+                        return ValidRelationship("specifies", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("specifies", out color);
+                        return validation ? null : InvalidRelationship("specifies", out color);
                     }
                 }
             }
@@ -1258,11 +1258,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Resource).Provides.Contains(targetElement))
                     {
-                        return ValidCDRelationship("provides", out color);
+                        return ValidRelationship("provides", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("provides", out color);
+                        return validation ? null : InvalidRelationship("provides", out color);
                     }
                 }
             }
@@ -1272,11 +1272,22 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Intention).Concretizes.Contains(targetElement))
                     {
-                        return ValidCDRelationship("concretizes", out color);
+                        return ValidRelationship("concretizes", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("concretizes", out color);
+                        return validation ? null : InvalidRelationship("concretizes", out color);
+                    }
+                }
+                else if (targetElement is Context)
+                {
+                    if ((sourceElement as Intention).IsSatisfiedBy.Contains(targetElement))
+                    {
+                        return ValidRelationship("satisfies", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidRelationship("satisfies", out color);
                     }
                 }
             }
@@ -1286,19 +1297,19 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Entity).MandatoryInputTo.Contains(targetElement))
                     {
-                        return ValidCDRelationship("mandatory input", out color);
+                        return ValidRelationship("mandatory input", out color);
                     }
                     else if ((sourceElement as Entity).OptionalInputTo.Contains(targetElement))
                     {
-                        return ValidCDRelationship("optional input", out color);
+                        return ValidRelationship("optional input", out color);
                     }
                     else if ((sourceElement as Entity).InputTo.Contains(targetElement))
                     {
-                        return ValidCDRelationship("input", out color);
+                        return ValidRelationship("input", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("input", out color);
+                        return validation ? null : InvalidRelationship("input", out color);
                     }
                 }
             }
@@ -1308,22 +1319,22 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Task).Output.Contains(targetElement))
                     {
-                        return ValidCDRelationship("output", out color);
+                        return ValidRelationship("output", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("output", out color);
+                        return validation ? null : InvalidRelationship("output", out color);
                     }
                 }
                 else if (targetElement is Task)
                 {
                     if ((sourceElement as Task).HasSubStep.Contains(targetElement))
                     {
-                        return ValidCDRelationship("has substep", out color);
+                        return ValidRelationship("has substep", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("has substep", out color);
+                        return validation ? null : InvalidRelationship("has substep", out color);
                     }
                 }
             }
@@ -1333,15 +1344,15 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Argument).Supports.Contains(targetElement))
                     {
-                        return ValidCDRelationship("supports", out color);
+                        return ValidRelationship("supports", out color);
                     }
                     else if ((sourceElement as Argument).ObjectsTo.Contains(targetElement))
                     {
-                        return ValidCDRelationship("objects to", out color);
+                        return ValidRelationship("objects to", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("supports", out color);
+                        return validation ? null : InvalidRelationship("supports", out color);
                     }
                 }
             }
@@ -1351,11 +1362,25 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Process).Realizes.Contains(targetElement))
                     {
-                        return ValidCDRelationship("realizes", out color);
+                        return ValidRelationship("realizes", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("realizes", out color);
+                        return validation ? null : InvalidRelationship("realizes", out color);
+                    }
+                }
+            }
+            else if (sourceElement is Context)
+            {
+                if (targetElement is Intention)
+                {
+                    if ((targetElement as Intention).IsSatisfiedBy.Contains(sourceElement))
+                    {
+                        return ValidRelationship("satisfies", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidRelationship("satisfies", out color);
                     }
                 }
             }
@@ -1365,22 +1390,28 @@ namespace ProcessConfigurationManager.WPF.UML
         private string CheckUCDInclude(SoftwareProcessElement sourceElement, SoftwareProcessElement targetElement, bool validation, out string color)
         {
             color = Constants.VALID_COLOR;
-            if (sourceElement is ProcessStep && !(sourceElement is Event))
+            if (sourceElement is ProcessStep && !(sourceElement is Event) && targetElement is ProcessStep && !(targetElement is Event))
             {
-                if (targetElement is ProcessStep && !(targetElement is Event))
-                {
-                    var allcooperations = softwareProcess.Where(x => x is Cooperation).Select(x => x as Cooperation);
+                var allcooperations = softwareProcess.Where(x => x is Cooperation).Select(x => x as Cooperation).ToList();
 
-                    var cooperations = allcooperations.Where(cooperation => cooperation.Source == sourceElement && cooperation.Target == targetElement && cooperation.Relation == CooperationType.IsFollowedBy);
-                    if (cooperations.Count() != 0)
+                var cooperations = allcooperations.Where(cooperation => cooperation.Source == sourceElement && cooperation.Target == targetElement && cooperation.Relation == CooperationType.IsFollowedBy).ToList();
+                if (cooperations.Count() != 0)
+                {
+                    return ValidRelationship("", out color);
+                }
+
+                if (sourceElement is Process)
+                {
+                    if ((sourceElement as Process).ParentProcess.Contains(targetElement))
                     {
-                        return ValidCDRelationship("is followed by", out color);
+                        return ValidRelationship("", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("is followed by", out color);
+                        return validation ? null : InvalidRelationship("", out color);
                     }
                 }
+                return InvalidRelationship("", out color);
             }
 
             return null;
@@ -1401,13 +1432,13 @@ namespace ProcessConfigurationManager.WPF.UML
                         var cooperation = cooperations.FirstOrDefault();
                         if (cooperation != null)
                         {
-                            var relationshipString = GetCooperationString(cooperation.Relation);
-                            return ValidCDRelationship(relationshipString, out color);
+                            //var relationshipString = GetCooperationString(cooperation.Relation);
+                            return ValidRelationship("", out color);
                         }
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("is coordinated with", out color);
+                        return validation ? null : InvalidRelationship("", out color);
                     }
                 }
             }
@@ -1424,22 +1455,22 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Process).Collaborates.Contains(targetElement))
                     {
-                        return ValidCDRelationship("collaborates", out color);
+                        return ValidRelationship("collaborates", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("collaborates", out color);
+                        return validation ? null : InvalidRelationship("collaborates", out color);
                     }
                 }
                 else if (targetElement is Alternative)
                 {
                     if ((sourceElement as Process).Decides.Contains(targetElement))
                     {
-                        return ValidCDRelationship("decides", out color);
+                        return ValidRelationship("decides", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("decides", out color);
+                        return validation ? null : InvalidRelationship("decides", out color);
                     }
                 }
             }
@@ -1449,11 +1480,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Law).Controls.Contains(targetElement))
                     {
-                        return ValidCDRelationship("controls", out color);
+                        return ValidRelationship("controls", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("controls", out color);
+                        return validation ? null : InvalidRelationship("controls", out color);
                     }
                 }
             }
@@ -1463,11 +1494,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Role).Performs.Contains(targetElement))
                     {
-                        return ValidCDRelationship("performs", out color);
+                        return ValidRelationship("performs", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("performs", out color);
+                        return validation ? null : InvalidRelationship("performs", out color);
                     }
                 }
             }
@@ -1477,11 +1508,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Alternative).ContributesTo.Contains(targetElement))
                     {
-                        return ValidCDRelationship("contributes to", out color);
+                        return ValidRelationship("contributes to", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("contributes to", out color);
+                        return validation ? null : InvalidRelationship("contributes to", out color);
                     }
                 }
             }
@@ -1491,11 +1522,11 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Task).Decides.Contains(targetElement))
                     {
-                        return ValidCDRelationship("decides", out color);
+                        return ValidRelationship("decides", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("decides", out color);
+                        return validation ? null : InvalidRelationship("decides", out color);
                     }
                 }
             }
@@ -1505,24 +1536,79 @@ namespace ProcessConfigurationManager.WPF.UML
                 {
                     if ((sourceElement as Group).ConsistsOf.Contains(targetElement))
                     {
-                        return ValidCDRelationship("consists of", out color);
+                        return ValidRelationship("consists of", out color);
                     }
                     else
                     {
-                        return validation ? null : InvalidCDRelationship("consists of", out color);
+                        return validation ? null : InvalidRelationship("consists of", out color);
                     }
                 }
             }
             return null;
         }
 
-        private string ValidCDRelationship(string relationship, out string color)
+        public string CheckUCDSystemRelationship(string systemIRI, string nodeIRI, bool validation, out string color)
+        {
+            color = Constants.VALID_COLOR;
+            SoftwareProcessElement system = softwareProcess.FirstOrDefault(x => x.IRI == systemIRI);
+            SoftwareProcessElement element = softwareProcess.FirstOrDefault(x => x.IRI == nodeIRI);
+
+            if (system is Context)
+            {
+                if (element is Process)
+                {
+                    if ((system as Context).Executes.Contains(element))
+                    {
+                        return ValidRelationship("executes", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidRelationship("executes", out color);
+                    }
+                }
+                else if (element is Task)
+                {
+                    foreach (var process in (system as Context).Executes.Where(x => x is Process && (system as Context).Executes.Contains(x)).Select(p => p as Process))
+                    {
+                        if (process.ParentProcess.Contains(element))
+                        {
+                            return ValidRelationship("executes", out color);
+                        }
+                    }
+                    return validation ? null : InvalidRelationship("executes", out color);
+                }
+                else if (element is UPMM.Object)
+                {
+                    if ((system as Context).Scopes.Contains(element))
+                    {
+                        return ValidRelationship("scopes", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidRelationship("scopes", out color);
+                    }
+                }
+                else if (element is Intention)
+                {
+                    if ((system as Context).Satisfies.Contains(element))
+                    {
+                        return ValidRelationship("satisfies", out color);
+                    }
+                    else
+                    {
+                        return validation ? null : InvalidRelationship("satisfies", out color);
+                    }
+                }
+            }
+            return null;
+        }
+        private string ValidRelationship(string relationship, out string color)
         {
             color = Constants.VALID_COLOR;
             return relationship;
         }
 
-        private string InvalidCDRelationship(string relationship, out string color)
+        private string InvalidRelationship(string relationship, out string color)
         {
             color = Constants.INVALID_COLOR;
             return relationship;

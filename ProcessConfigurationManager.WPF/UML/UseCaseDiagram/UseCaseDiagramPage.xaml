@@ -90,7 +90,7 @@
                         <go:Route Routing="Normal" Curve="JumpGap" Corner="20" RelinkableTo="True" RelinkableFrom="True"/>
                     </go:Link.Route>
                     <go:LinkShape x:Name="Path" Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1" go:LinkPanel.IsLinkShape="True"/>
-                    <Path Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1"  go:LinkPanel.ToArrow="OpenTriangle" go:LinkPanel.ToArrowScale="1.5"/>
+                    <Path Stroke="{Binding Path=Data.Color, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1"/>
                     <TextBlock Text="{Binding Path=Data.Text, Mode=TwoWay}" go:Part.TextEditable="True"
                                go:LinkPanel.Offset="NaN NaN" go:LinkPanel.Orientation="None" Foreground="Black"/>
                 </go:LinkPanel>
@@ -181,20 +181,23 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="{Binding Path=Data.Stereotype}" Style="{StaticResource TextBlockStyle}"/>
                         <TextBlock TextAlignment="Center" Grid.Row="1" Text="{Binding Path=Data.Name}" Style="{StaticResource TextBlockStyle}"/>
-                        <TextBlock Text="{Binding Path=Data.Text}" Style="{StaticResource TextBlockStyle}" Foreground="{Binding Path=Data.BorderColor, Converter={StaticResource theStringBrushConverter}}"/>
+                        <TextBlock Grid.Row="2" Text="{Binding Path=Data.Text}" Style="{StaticResource TextBlockStyle}" Foreground="{Binding Path=Data.BorderColor, Converter={StaticResource theStringBrushConverter}}"/>
                         <Rectangle Grid.Row="0" Grid.RowSpan="2" Fill="Transparent"/>
                     </Grid>
                 </go:NodePanel>
             </DataTemplate>
             <DataTemplate x:Key="Actor">
                 <go:NodePanel go:Part.SelectionElementName="Shape" go:Part.SelectionAdorned="True"
-                    go:Part.Resizable="True">
+                    go:Part.Resizable="True"
+                    go:Node.Location="{Binding Path=Data.Location, Mode=TwoWay}">
                     <StackPanel Orientation="Vertical">
                         <go:NodeShape x:Name="Shape" go:NodePanel.Figure="Actor"
-                              Stroke="Black" StrokeThickness="1" Fill="White"
+                              Stroke="{Binding Path=Data.BorderColor, Converter={StaticResource theStringBrushConverter}}"
+                              StrokeThickness="1" Fill="White"
                               Width="50" Height="80"
                               go:Node.FromSpot="AllSides" go:Node.ToSpot="AllSides"
                               go:Node.LinkableFrom="True" go:Node.LinkableTo="True"/>
@@ -202,6 +205,7 @@
                                 VerticalAlignment="Bottom" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding Path=Data.Name}" TextAlignment="Center" TextWrapping="Wrap"
                                 VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="100"/>
+                        <TextBlock TextAlignment="Center" Text="{Binding Path=Data.Text}" Style="{StaticResource TextBlockStyle}" Foreground="{Binding Path=Data.BorderColor, Converter={StaticResource theStringBrushConverter}}"/>
                     </StackPanel>
                 </go:NodePanel>
             </DataTemplate>
@@ -212,13 +216,10 @@
                               go:Part.SelectionAdorned="True"
                               go:Part.Resizable="False"
                               MaxWidth="200">
-                    <Rectangle x:Name="Shape"
-                             RadiusX="100" RadiusY="50"
+                    <Ellipse x:Name="Shape"
                              Stroke="{Binding Path=Data.BorderColor, Converter={StaticResource theStringBrushConverter}}" StrokeThickness="1"
                              go:Node.PortId="" Cursor="Hand"
-                             go:Node.FromSpot="AllSides" go:Node.ToSpot="AllSides"
                              go:Node.LinkableFrom="True" go:Node.LinkableTo="True" Fill="White"/>
-                    <Rectangle Fill="Transparent" Margin="10" />
                     <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="20,10,20,10">
                         <TextBlock Text="{Binding Path=Data.Stereotype}" Style="{StaticResource TextBlockStyle}"/>
                         <TextBlock TextAlignment="Center" Text="{Binding Path=Data.Name}" Style="{StaticResource TextBlockStyle}"/>

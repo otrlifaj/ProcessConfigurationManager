@@ -33,6 +33,7 @@ namespace ProcessConfigurationManager.WPF.UML
         protected GraphLinksModel<UseCaseDiagramNodeData, String, String, UseCaseDiagramLinkData> DiagramModel { get; set; }
         private List<LinkTypeComboBoxItem> LinkTypes { get; set; }
         private string SelectedLinkType { get; set; }
+        private UseCaseDiagramNodeData NodeToEdit { get; set; }
 
         public static Boolean IsValidatingWithModel { get; set; } = false;
         public static Boolean AllowDuplicateNodes { get; set; } = false;
@@ -158,11 +159,11 @@ namespace ProcessConfigurationManager.WPF.UML
 
                 //zkontroluju, jestli všechny uzly, které mají IRI mají svůj elemnet v načteném profilu procesu
                 var loadedModel = new GraphLinksModel<UseCaseDiagramNodeData, string, string, UseCaseDiagramLinkData>();
-                loadedModel.Load<ClassDiagramNodeData, ClassDiagramLinkData>(diagramXml, Constants.UML_UCD_XML_NODE_STRING, Constants.UML_UCD_XML_LINK_STRING);
+                loadedModel.Load<UseCaseDiagramNodeData, UseCaseDiagramLinkData>(diagramXml, Constants.UML_UCD_XML_NODE_STRING, Constants.UML_UCD_XML_LINK_STRING);
 
                 string[] categories = { Constants.UML_UCD_ACTOR, Constants.UML_UCD_SYSTEM, Constants.UML_UCD_USE_CASE, Constants.UML_UCD_NOTE };
                 int countOfMissing = 0;
-                foreach (string IRI in (loadedModel.NodesSource as ObservableCollection<ClassDiagramNodeData>).Where(x => categories.Contains(x.Category)).Select(x => x.IRI))
+                foreach (string IRI in (loadedModel.NodesSource as ObservableCollection<UseCaseDiagramNodeData>).Where(x => categories.Contains(x.Category)).Select(x => x.IRI))
                 {
                     if (!SoftwareProcessProfile.Any(x => x.IRI == IRI))
                     {
@@ -235,9 +236,67 @@ namespace ProcessConfigurationManager.WPF.UML
             }
         }
 
+        // vynucení validace diagramu
         private void Validate_Click(object sender, RoutedEventArgs e)
         {
+            var originalLinksSource = new ObservableCollection<UseCaseDiagramLinkData>(diagram.LinksSource as ObservableCollection<UseCaseDiagramLinkData>);
+            diagram.LinksSource = new ObservableCollection<UseCaseDiagramLinkData>();
+            foreach (var linkData in originalLinksSource)
+            {
+                var fromData = (diagram.Model.NodesSource as ObservableCollection<UseCaseDiagramNodeData>).First(x => x.Key == linkData.From);
+                var toData = (diagram.Model.NodesSource as ObservableCollection<UseCaseDiagramNodeData>).First(x => x.Key == linkData.To);
+                var isValid = CheckLink(fromData, toData, linkData, category: linkData.Category);
+                if (isValid)
+                {
+                    (diagram.LinksSource as ObservableCollection<UseCaseDiagramLinkData>).Add(linkData);
+                }
+            }
 
+            // kontrola všech elementů, které jsou ve swimlane
+            var originalNodesSource = (diagram.Model.NodesSource as ObservableCollection<UseCaseDiagramNodeData>);
+
+            foreach (var nodeData in originalNodesSource)
+            {
+                if (nodeData.Category == Constants.UML_UCD_ACTOR || nodeData.SubGraphKey == null || nodeData.SubGraphKey == "" || nodeData.Category == Constants.UML_UCD_SYSTEM)
+                {
+                    nodeData.BorderColor = Constants.VALID_COLOR;
+                    nodeData.Text = null;
+                    continue;
+                }
+
+                string groupIRI = (diagram.Model.NodesSource as ObservableCollection<UseCaseDiagramNodeData>).Where(x => x.Key == nodeData.SubGraphKey).Select(x => x.IRI).FirstOrDefault();
+                if (groupIRI == "" || groupIRI == null)
+                    continue;
+
+
+                if (nodeData != null)
+                {
+
+                    if (nodeData.Category == Constants.UML_UCD_EDITABLE_NOTE || nodeData.Category == Constants.UML_UCD_SYSTEM || nodeData.Category == Constants.UML_UCD_ACTOR)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        string elementIRI = nodeData.IRI;
+
+                        if (elementIRI != null && groupIRI != null)
+                        {
+                            string relationship = Uml4Upmm.CheckUCDSystemRelationship(groupIRI, elementIRI, UseCaseDiagramPage.IsValidatingWithModel, out string color);
+                            if (relationship != null)
+                            {
+                                nodeData.BorderColor = color;
+                                nodeData.Text = null;
+                            }
+                            else
+                            {
+                                nodeData.BorderColor = Constants.INVALID_COLOR;
+                                nodeData.Text = Constants.UML_UCD_UNSUPPORTED;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void linkTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -259,7 +318,7 @@ namespace ProcessConfigurationManager.WPF.UML
                 data = (sender as Diagram).SelectedNode.Data as UseCaseDiagramNodeData;
 
             }
-            string[] categories = { Constants.UML_UCD_ACTOR, Constants.UML_UCD_SYSTEM, Constants.UML_UCD_NOTE, Constants.UML_UCD_USE_CASE };
+            string[] categories = { Constants.UML_UCD_ACTOR, Constants.UML_UCD_SYSTEM, Constants.UML_UCD_NOTE, Constants.UML_UCD_USE_CASE, Constants.UML_UCD_EDITABLE_NOTE };
 
             if (categories.Contains(data.Category) && !AllowDuplicateNodes)
             {
@@ -272,12 +331,88 @@ namespace ProcessConfigurationManager.WPF.UML
 
         private void diagram_LinkDrawn(object sender, Northwoods.GoXam.DiagramEventArgs e)
         {
+            Link link = (e.Part as Link);
+            UseCaseDiagramLinkData linkData = link.Data as UseCaseDiagramLinkData;
+            UseCaseDiagramNodeData fromData = link.FromData as UseCaseDiagramNodeData;
+            UseCaseDiagramNodeData toData = link.ToData as UseCaseDiagramNodeData;
 
+            var isValid = CheckLink(fromData, toData, linkData, category: SelectedLinkType);
+            if (!isValid)
+            {
+                (diagram.LinksSource as ObservableCollection<UseCaseDiagramLinkData>).Remove(linkData);
+            }
         }
 
         private void diagram_LinkRelinked(object sender, Northwoods.GoXam.DiagramEventArgs e)
         {
+            Link link = (e.Part as Link);
+            UseCaseDiagramLinkData linkData = link.Data as UseCaseDiagramLinkData;
+            UseCaseDiagramNodeData fromData = link.FromData as UseCaseDiagramNodeData;
+            UseCaseDiagramNodeData toData = link.ToData as UseCaseDiagramNodeData;
 
+            var isValid = CheckLink(fromData, toData, linkData, linkData.Category);
+            if (!isValid)
+            {
+                (diagram.LinksSource as ObservableCollection<UseCaseDiagramLinkData>).Remove(linkData);
+            }
+        }
+
+        private bool CheckLink(UseCaseDiagramNodeData fromData, UseCaseDiagramNodeData toData, UseCaseDiagramLinkData linkData, string category)
+        {
+            if (
+                (category == Constants.UML_UCD_ANCHOR)
+                &&
+                (fromData.Category == Constants.UML_UCD_EDITABLE_NOTE || toData.Category == Constants.UML_UCD_EDITABLE_NOTE)
+                &&
+                (fromData.Category != toData.Category)
+                &&
+                (fromData.Category != Constants.UML_UCD_NOTE)
+                &&
+                (toData.Category != Constants.UML_UCD_NOTE)
+                )
+            {
+                linkData.Category = category;
+                linkData.Color = Constants.VALID_COLOR;
+                return IsLinkUniqueBothWays(linkData, category);
+            }
+            else
+            {
+                string relationship = Uml4Upmm.CheckUCDRelationship(fromData.IRI, toData.IRI, UseCaseDiagramPage.IsValidatingWithModel, out string color, category);
+
+                if (relationship == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    linkData.Category = category;
+                    linkData.Text = relationship == "" ? relationship : "<<" + relationship + ">>";
+                    linkData.Color = color;
+                }
+            }
+            return IsLinkUnique(linkData, category);
+        }
+
+        private bool IsLinkUnique(UseCaseDiagramLinkData linkData, string category)
+        {
+            if ((diagram.LinksSource as ObservableCollection<UseCaseDiagramLinkData>)
+                .Count(x => x.From == linkData.From && x.To == linkData.To && x.Category == category) > 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool IsLinkUniqueBothWays(UseCaseDiagramLinkData linkData, string category)
+        {
+            int count1 = (diagram.LinksSource as ObservableCollection<UseCaseDiagramLinkData>)
+                .Count(x => x.From == linkData.From && x.To == linkData.To && x.Category == category);
+            int count2 = (diagram.LinksSource as ObservableCollection<UseCaseDiagramLinkData>)
+                .Count(x => x.From == linkData.To && x.To == linkData.From && x.Category == category);
+            return count1 + count2 < 2;
         }
 
         // event handlery pro zobrazování popisu vybraného uzlu
@@ -327,17 +462,31 @@ namespace ProcessConfigurationManager.WPF.UML
 
         private void SaveNoteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            EditNoteInputBox.Visibility = Visibility.Collapsed;
+            String noteName = NoteNameInputTextBox.Text;
+            String noteText = NoteTextInputTextBox.Text;
+            NodeToEdit.Name = noteName;
+            NodeToEdit.Text = noteText;
+            NoteNameInputTextBox.Text = String.Empty;
+            NoteTextInputTextBox.Text = String.Empty;
         }
 
         private void CancelSaveNoteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            EditNoteInputBox.Visibility = Visibility.Collapsed;
+            NoteNameInputTextBox.Text = String.Empty;
+            NoteTextInputTextBox.Text = String.Empty;
         }
 
         private void editNoteButton_Click(object sender, RoutedEventArgs e)
         {
+            Node node = Part.FindAncestor<Node>(e.OriginalSource as UIElement);
+            if (node == null) return;
 
+            NodeToEdit = node.Data as UseCaseDiagramNodeData;
+            NoteNameInputTextBox.Text = NodeToEdit.Name;
+            NoteTextInputTextBox.Text = NodeToEdit.Text;
+            EditNoteInputBox.Visibility = Visibility.Visible;
         }
     }
 
@@ -369,9 +518,13 @@ namespace ProcessConfigurationManager.WPF.UML
     }
 
     // tool pro vkládání uzlů do systému -- obsahuje validaci pro drag-and-drop do swimlane
-    public class SystemDraggingTool : DraggingTool
+    internal class SystemDraggingTool : DraggingTool
     {
-        List<SoftwareProcessElement> process = OWLParser.OWLAPI.GetSoftwareProcess();
+        UML4UPMM Uml4Upmm { get; set; }
+        public SystemDraggingTool()
+        {
+            Uml4Upmm = new UML4UPMM(OWLParser.OWLAPI.GetSoftwareProcess());
+        }
         public override bool IsValidMember(Northwoods.GoXam.Group group, Node node)
         {
             try
@@ -386,24 +539,30 @@ namespace ProcessConfigurationManager.WPF.UML
                 if (node != null)
                 {
 
-                    if (node.Category == Constants.UML_UCD_SYSTEM) return false;
-                    string groupIRI = (group.Data as UseCaseDiagramNodeData).IRI;
-                    string nodeIRI = (node.Data as UseCaseDiagramNodeData).IRI;
-
-                    if (nodeIRI != null)
+                    if (node.Category == Constants.UML_UCD_SYSTEM || node.Category == Constants.UML_UCD_ACTOR)
                     {
-                        if (UseCaseDiagramPage.IsValidatingWithModel)
+                        return false;
+                    }
+
+                    if (node.Category == Constants.UML_UCD_EDITABLE_NOTE) return true;
+                    string systemIRI = (group.Data as UseCaseDiagramNodeData).IRI;
+                    string elementIRI = (node.Data as UseCaseDiagramNodeData).IRI;
+
+                    if (elementIRI != null && systemIRI != null)
+                    {
+                        string relationship = Uml4Upmm.CheckUCDSystemRelationship(systemIRI, elementIRI, UseCaseDiagramPage.IsValidatingWithModel, out string color);
+                        if (relationship != null)
                         {
-                            
+                            (node.Data as UseCaseDiagramNodeData).BorderColor = color;
+                            (node.Data as UseCaseDiagramNodeData).Text = null;
                         }
                         else
                         {
-                            
+                            (node.Data as UseCaseDiagramNodeData).BorderColor = Constants.INVALID_COLOR;
+                            (node.Data as UseCaseDiagramNodeData).Text = Constants.UML_UCD_UNSUPPORTED;
+
                         }
                     }
-
-                    return true;
-
                 }
                 return base.IsValidMember(group, node);
             }

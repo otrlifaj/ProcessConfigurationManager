@@ -56,6 +56,7 @@ namespace ProcessConfigurationManager.WPF.UML
         public static readonly string UML_UCD_XML_NODE_STRING = "Node";
         public static readonly string UML_UCD_XML_ROOT_STRING = "KOTRUseCaseDiagram";
         public static readonly string UML_UCD_XML_VALIDATION_ATTRIBUTE_STRING = "validation";
+        public static readonly string UML_UCD_UNSUPPORTED = "UNSUPPORTED";
 
 
         public static readonly string INVALID_COLOR = "Red";
